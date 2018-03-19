@@ -1,0 +1,11 @@
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\CodeKatas.Tests.Unit.dll
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\CodeKatas.Tests.Unit.pdb
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\CodeKatas.dll
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\nunit.framework.dll
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\CodeKatas.pdb
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\nunit.framework.pdb
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\bin\Debug\nunit.framework.xml
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\obj\Debug\CodeKatas.Tests.Unit.csprojResolveAssemblyReference.cache
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\obj\Debug\CodeKatas.Tests.Unit.csproj.CoreCompileInputs.cache
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\obj\Debug\CodeKatas.Tests.Unit.dll
+C:\Users\Howeson\dev\CodeKatas\CodeKatas.Tests.Unit\obj\Debug\CodeKatas.Tests.Unit.pdb

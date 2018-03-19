@@ -1,0 +1,6 @@
+C:\Users\Howeson\dev\CodeKatas\CodeKatas\bin\Debug\CodeKatas.dll
+C:\Users\Howeson\dev\CodeKatas\CodeKatas\bin\Debug\CodeKatas.pdb
+C:\Users\Howeson\dev\CodeKatas\CodeKatas\obj\Debug\CodeKatas.csprojResolveAssemblyReference.cache
+C:\Users\Howeson\dev\CodeKatas\CodeKatas\obj\Debug\CodeKatas.csproj.CoreCompileInputs.cache
+C:\Users\Howeson\dev\CodeKatas\CodeKatas\obj\Debug\CodeKatas.dll
+C:\Users\Howeson\dev\CodeKatas\CodeKatas\obj\Debug\CodeKatas.pdb

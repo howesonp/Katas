@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace CodeKatas.Tests.Unit
@@ -52,6 +53,23 @@ namespace CodeKatas.Tests.Unit
             var actualResult = _stringCalculator.Add(stringInputNumber);
 
             actualResult.Should().Be(expectedResult);
+        }
+
+        [TestCase(@"//;\n1;2", 3)]
+        [TestCase(@"//^\n1^2", 3)]
+        [TestCase(@"//'\n1'2", 3)]
+        public void ReturnSummedNumber_WhenAdding_GivenADelimitedDefinedAtTheStartOfTheString(string stringInputNumber,
+            int expectedResult)
+        {
+            var actualResult = _stringCalculator.Add(stringInputNumber);
+
+            actualResult.Should().Be(expectedResult);
+        }
+
+        [TestCase("-1", "negatives not allowed - -1")]
+        public void ReturnAnException_WhenAdding_GivenANegativeNumber(string stringInputNumber, string expectedResult)
+        {
+            Assert.Throws<Exception>(() => _stringCalculator.Add(stringInputNumber), expectedResult);
         }
     }
 }

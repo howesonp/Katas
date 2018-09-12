@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalculationExtensionTests.cs" />
+    <Compile Include="CalculationExtensionShould.cs" />
     <Compile Include="FizzBuzzGameShould.cs" />
     <Compile Include="IsTriangleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

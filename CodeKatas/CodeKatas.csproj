@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CalculationExtensions.cs" />
     <Compile Include="FizzBuzzGame.cs" />
+    <Compile Include="StringCalculator.cs" />
     <Compile Include="TriangleKata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

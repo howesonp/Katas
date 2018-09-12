@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace CodeKatas
 {
@@ -6,11 +7,22 @@ namespace CodeKatas
     {
         public int Add(string stringNumber)
         {
-            var stringNumberCommonDelimters = stringNumber.Replace("\n", ",");
+            string rationalisedString;
 
-            if (stringNumberCommonDelimters.Contains(","))
+            if (stringNumber.StartsWith(@"//"))
             {
-                var splitNumbers = stringNumberCommonDelimters.Split(',');
+                var delimiter = stringNumber.ToCharArray()[2];
+                rationalisedString = stringNumber.Replace($@"//{delimiter}\n", string.Empty);
+                rationalisedString = rationalisedString.Replace(delimiter.ToString(), ",");
+            }
+            else
+            {
+                rationalisedString = stringNumber.Replace("\n", ",");
+            }
+            
+            if (rationalisedString.Contains(","))
+            {
+                var splitNumbers = rationalisedString.Split(',');
 
                 return splitNumbers.Sum(int.Parse);
             }
@@ -19,6 +31,11 @@ namespace CodeKatas
 
             if (canParse)
             {
+                if (parsedInt < 0)
+                {
+                    throw new Exception($"negatives not allowed - {parsedInt}");
+                }
+
                 return parsedInt;
             }
 

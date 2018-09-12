@@ -19,13 +19,28 @@ namespace CodeKatas
 
         public string CalculateFizzBuzz(int inputNumber)
         {
-            if (inputNumber < 1 || inputNumber > 100) throw new ArgumentOutOfRangeException();
+            const int minNumber = 1;
+            const int maxNumber = 100;
 
-            if (inputNumber % 3 == 0 && inputNumber % 5 == 0) return "FIZZBUZZ";
+            if (inputNumber < minNumber || inputNumber > maxNumber)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
 
-            if (inputNumber % 3 == 0) return "FIZZ";
+            if (inputNumber.IsDivisibleBy(3) && inputNumber.IsDivisibleBy(5))
+            {
+                return "FIZZBUZZ";
+            }
 
-            if (inputNumber % 5 == 0) return "BUZZ";
+            if (inputNumber.IsDivisibleBy(3))
+            {
+                return "FIZZ";
+            }
+
+            if (inputNumber.IsDivisibleBy(5))
+            {
+                return "BUZZ";
+            }
 
             return inputNumber.ToString();
         }

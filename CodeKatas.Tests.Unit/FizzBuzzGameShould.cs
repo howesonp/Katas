@@ -7,42 +7,6 @@ namespace CodeKatas.Tests.Unit
     [TestFixture]
     public class FizzBuzzGameShould
     {
-        //[Test]
-        //public void PrintNumbers_From1To100()
-        //{
-        //    var game = new FizzBuzzGame();
-
-        //    var result = game.Play();
-
-        //    result.Count().Should().Be(99);
-        //}
-
-        //[Test]
-        //public void ReturnFizz_WhenNumberIsDivisibleByThree()
-        //{
-        //    var game = new FizzBuzzGame();
-
-        //    var result = game.Play();
-
-        //    for (var i = 1; i < 100; i+=2)
-        //    {
-        //        result.Should().Equal("FIZZ");
-        //    }
-        //}
-
-        //[Test]
-        //public void ReturnBuzz_WhenNumberIsDivisibleByFive()
-        //{
-        //    var game = new FizzBuzzGame();
-
-        //    var result = game.Play();
-
-        //    for (var i = 1; i < 100; i += 4)
-        //    {
-        //        result.Should().Equal("BUZZ");
-        //    }
-        //}
-
         [TestCase(1, "1")]
         [TestCase(98, "98")]
         [TestCase(3, "FIZZ")]

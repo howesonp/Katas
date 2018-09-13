@@ -68,9 +68,11 @@ namespace CodeKatas.Tests.Unit
 
         [TestCase("-1", "negatives not allowed - -1")]
         [TestCase("-1, 2, 3, -3", "negatives not allowed - -1,-3")]
-        public void ReturnAnException_WhenAdding_GivenANegativeNumber(string stringInputNumber, string expectedResult)
+        public void ThrowAnException_WhenAdding_GivenANegativeNumber(string stringInputNumber, string expectedExceptionMessage)
         {
-            Assert.Throws<Exception>(() => _stringCalculator.Add(stringInputNumber), expectedResult);
+            Action addWithNegatives = () => _stringCalculator.Add(stringInputNumber);
+
+            addWithNegatives.Should().Throw<Exception>().WithMessage(expectedExceptionMessage);
         }
     }
 }

@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BowlingGame.cs" />
+    <Compile Include="BowlingGameExtensions.cs" />
     <Compile Include="CalculationExtensions.cs" />
     <Compile Include="FizzBuzzGame.cs" />
     <Compile Include="StringCalculator.cs" />

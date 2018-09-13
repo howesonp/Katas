@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BowlingGameShould.cs" />
     <Compile Include="CalculationExtensionShould.cs" />
     <Compile Include="FizzBuzzGameShould.cs" />
     <Compile Include="IsTriangleTests.cs" />

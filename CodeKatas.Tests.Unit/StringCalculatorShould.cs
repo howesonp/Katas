@@ -47,7 +47,7 @@ namespace CodeKatas.Tests.Unit
             actualResult.Should().Be(expectedResult);
         }
 
-        [TestCase("1\n2,3", 6)]
+        [TestCase(@"1\n2,3", 6)]
         public void ReturnSummedNumber_WhenAdding_GivenTwoStringNumbersSeparatedByTwoDifferentDelimiters(string stringInputNumber, int expectedResult)
         {
             var actualResult = _stringCalculator.Add(stringInputNumber);
@@ -67,6 +67,7 @@ namespace CodeKatas.Tests.Unit
         }
 
         [TestCase("-1", "negatives not allowed - -1")]
+        [TestCase("-1, 2, 3, -3", "negatives not allowed - -1,-3")]
         public void ReturnAnException_WhenAdding_GivenANegativeNumber(string stringInputNumber, string expectedResult)
         {
             Assert.Throws<Exception>(() => _stringCalculator.Add(stringInputNumber), expectedResult);

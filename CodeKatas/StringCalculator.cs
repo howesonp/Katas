@@ -1,45 +1,54 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace CodeKatas
 {
     public class StringCalculator
     {
+        private const char Delimiter = ',';
+
         public int Add(string stringNumber)
         {
-            string rationalisedString;
-
-            if (stringNumber.StartsWith(@"//"))
+            if (string.IsNullOrEmpty(stringNumber))
             {
-                var delimiter = stringNumber.ToCharArray()[2];
-                rationalisedString = stringNumber.Replace($@"//{delimiter}\n", string.Empty);
-                rationalisedString = rationalisedString.Replace(delimiter.ToString(), ",");
-            }
-            else
-            {
-                rationalisedString = stringNumber.Replace("\n", ",");
-            }
-            
-            if (rationalisedString.Contains(","))
-            {
-                var splitNumbers = rationalisedString.Split(',');
-
-                return splitNumbers.Sum(int.Parse);
+                return 0;
             }
 
-            var canParse = int.TryParse(stringNumber, out var parsedInt);
+            var rationalisedString = stringNumber.Replace(@"\n", Delimiter.ToString())
+                                                 .Split(Delimiter);
 
-            if (canParse)
+            var numberStringsWithDefaultDelimiter = GetRationalisedStringNumberArray(rationalisedString);
+        
+            var arrayOfInts = numberStringsWithDefaultDelimiter.Select(int.Parse).ToArray();
+
+            CheckForNegativeIntegersAndThrowExceptionIfFound(arrayOfInts);
+
+            return arrayOfInts.Sum();
+        }
+
+        private static string[] GetRationalisedStringNumberArray(string[] arrayOfStringNumbers)
+        {
+            if (arrayOfStringNumbers[0].StartsWith(@"//"))
             {
-                if (parsedInt < 0)
-                {
-                    throw new Exception($"negatives not allowed - {parsedInt}");
-                }
-
-                return parsedInt;
+                var variableDelimiter = arrayOfStringNumbers[0].Remove(0, 2);
+                arrayOfStringNumbers[1] = arrayOfStringNumbers[1].Replace(variableDelimiter, Delimiter.ToString());
+                return arrayOfStringNumbers[1].Split(Delimiter);
             }
 
-            return 0;
+            return arrayOfStringNumbers;
+        }
+
+        private static void CheckForNegativeIntegersAndThrowExceptionIfFound(int[] arrayOfNumbers)
+        {
+            if (arrayOfNumbers.Any(parsedInputNumber => parsedInputNumber < 0))
+            {
+                var numbers = string.Join(",", arrayOfNumbers.Where(parsedInputNumber => parsedInputNumber < 0));
+
+                var exceptionMessage = $"negatives not allowed - { numbers }";
+
+                throw new Exception(exceptionMessage);
+            }
         }
     }
 }

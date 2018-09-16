@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeKatas", "CodeKatas.csproj", "{79A126BB-6517-4F1C-9646-722F65F2458A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "u", "u.csproj", "{79A126BB-6517-4F1C-9646-722F65F2458A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{628109B8-28BA-4896-BA7F-459BE243659D}"
 EndProject

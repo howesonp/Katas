@@ -1,55 +1,61 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeKatas
 {
     public class BowlingGame
     {
         private const string Miss = "-";
+        private static List<int> _scoreTracker;
 
         public int Score(string game)
         {
+            _scoreTracker = null;
+            _scoreTracker = new List<int>();
 
             var frames = game.Split('|');
+            var totalScore = 0;
+        
+            for (int i = 0; i < frames.Length; i++)
+            {
+                totalScore += ScoreFrame(frames[i], i);
+            }
 
-            return frames.Sum(ScoreFrame);
+            return totalScore;
         }
 
-        private static int ScoreFrame(string game)
+        private int ScoreFrame(string frame, int frameNumber)
         {
-            if (string.IsNullOrEmpty(game))
+            if (string.IsNullOrEmpty(frame))
             {
                 return 0;
             }
 
-            var firstHit = game.Substring(0, 1);
-            var secondHit = game.Substring(1, 1);
+            var frameScore = 0;
 
-            if (firstHit.IsMiss() && secondHit.IsMiss())
+            frameScore += ScoreRoll(frame.Substring(0, 1));
+            frameScore += ScoreRoll(frame.Substring(1, 1));
+
+            return frameScore;
+        }
+
+        private int ScoreRoll(string rollNumber)
+        {
+            if (rollNumber.IsMiss())
             {
+                _scoreTracker.Add(0);
                 return 0;
             }
 
-            if (firstHit.IsSpare() || secondHit.IsSpare())
+            if (rollNumber.IsStrike() || rollNumber.IsSpare())
             {
+                _scoreTracker.Add(10);
                 return 10;
             }
 
-            if (firstHit.IsStrike() || secondHit.IsStrike())
-            {
-                return 10;
-            }
-
-            if (secondHit.IsMiss())
-            {
-                return int.Parse(firstHit);
-            }
-
-            if (firstHit.IsMiss())
-            {
-                return int.Parse(secondHit);
-            }
-
-            return int.Parse(firstHit) + int.Parse(secondHit);
+            _scoreTracker.Add(int.Parse(rollNumber));
+            return int.Parse(rollNumber);
         }
     }
 }

@@ -40,22 +40,31 @@ namespace CodeKatas
             return frameScore;
         }
 
-        private int ScoreRoll(string rollNumber)
-        {
-            if (rollNumber.IsMiss())
+        private int ScoreRoll(string pinsHitOnRoll)
+        { 
+            if (pinsHitOnRoll.IsMiss())
             {
                 _scoreTracker.Add(0);
                 return 0;
             }
 
-            if (rollNumber.IsStrike() || rollNumber.IsSpare())
+            if (pinsHitOnRoll.IsStrike() || pinsHitOnRoll.IsSpare())
             {
                 _scoreTracker.Add(10);
+                //AddToPreviousStikeOrSpareIfRequired(_scoreTracker, 10);
+
                 return 10;
             }
 
-            _scoreTracker.Add(int.Parse(rollNumber));
-            return int.Parse(rollNumber);
+            var score = int.Parse(pinsHitOnRoll);
+
+            _scoreTracker.Add(int.Parse(pinsHitOnRoll));
+            return int.Parse(pinsHitOnRoll);
+        }
+
+        private void AddToPreviousStikeOrSpareIfRequired(ref List<int> scoreTracker, int i)
+        {
+            
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace CodeKatas
 {
@@ -15,16 +14,16 @@ namespace CodeKatas
                 return 0;
             }
 
-            var rationalisedString = stringNumber.Replace(@"\n", Delimiter.ToString())
+            var stringNumberNewLinesReplaced = stringNumber.Replace(@"\n", Delimiter.ToString())
                                                  .Split(Delimiter);
 
-            var numberStringsWithDefaultDelimiter = GetRationalisedStringNumberArray(rationalisedString);
+            var numberStrings = GetRationalisedStringNumberArray(stringNumberNewLinesReplaced);
         
-            var arrayOfInts = numberStringsWithDefaultDelimiter.Select(int.Parse).ToArray();
+            var arrayOfInputInts = numberStrings.Select(int.Parse).ToArray();
 
-            CheckForNegativeIntegersAndThrowExceptionIfFound(arrayOfInts);
+            CheckForNegativeIntegersAndThrowExceptionIfFound(arrayOfInputInts);
 
-            return arrayOfInts.Sum();
+            return arrayOfInputInts.Sum();
         }
 
         private static string[] GetRationalisedStringNumberArray(string[] arrayOfStringNumbers)
@@ -43,7 +42,7 @@ namespace CodeKatas
         {
             if (arrayOfNumbers.Any(parsedInputNumber => parsedInputNumber < 0))
             {
-                var numbers = string.Join(",", arrayOfNumbers.Where(parsedInputNumber => parsedInputNumber < 0));
+                var numbers = string.Join(Delimiter.ToString(), arrayOfNumbers.Where(parsedInputNumber => parsedInputNumber < 0));
 
                 var exceptionMessage = $"negatives not allowed - { numbers }";
 

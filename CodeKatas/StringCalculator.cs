@@ -14,40 +14,15 @@ namespace CodeKatas
                 return 0;
             }
 
-            var stringNumberNewLinesReplaced = stringNumber.Replace(@"\n", Delimiter.ToString())
-                                                 .Split(Delimiter);
+            stringNumber.ReplaceNewLinesWithDefaultDelimiter();
 
-            var numberStrings = GetRationalisedStringNumberArray(stringNumberNewLinesReplaced);
-        
-            var arrayOfInputInts = numberStrings.Select(int.Parse).ToArray();
+            var stringNumbersArray = stringNumber.SimplifyDelimitersWithDefault();
 
-            CheckForNegativeIntegersAndThrowExceptionIfFound(arrayOfInputInts);
+            var numbers = stringNumbersArray.ConvertToNumbers();
 
-            return arrayOfInputInts.Sum();
-        }
+            numbers.CheckForNegatives();
 
-        private static string[] GetRationalisedStringNumberArray(string[] arrayOfStringNumbers)
-        {
-            if (arrayOfStringNumbers[0].StartsWith(@"//"))
-            {
-                var variableDelimiter = arrayOfStringNumbers[0].Remove(0, 2);
-                arrayOfStringNumbers[1] = arrayOfStringNumbers[1].Replace(variableDelimiter, Delimiter.ToString());
-                return arrayOfStringNumbers[1].Split(Delimiter);
-            }
-
-            return arrayOfStringNumbers;
-        }
-
-        private static void CheckForNegativeIntegersAndThrowExceptionIfFound(int[] arrayOfNumbers)
-        {
-            if (arrayOfNumbers.Any(parsedInputNumber => parsedInputNumber < 0))
-            {
-                var numbers = string.Join(Delimiter.ToString(), arrayOfNumbers.Where(parsedInputNumber => parsedInputNumber < 0));
-
-                var exceptionMessage = $"negatives not allowed - { numbers }";
-
-                throw new Exception(exceptionMessage);
-            }
+            return numbers.Sum();
         }
     }
 }

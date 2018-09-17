@@ -63,9 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeKatas\u.csproj">
+    <ProjectReference Include="..\CodeKatas\CodeKatas.csproj">
       <Project>{79a126bb-6517-4f1c-9646-722f65f2458a}</Project>
-      <Name>u</Name>
+      <Name>CodeKatas</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

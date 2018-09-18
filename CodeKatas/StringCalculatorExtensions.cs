@@ -20,7 +20,7 @@ namespace CodeKatas
             {
                 var negativeNumbers = string.Join(Delimiter.ToString(), numbers.Where(parsedInputNumber => parsedInputNumber < 0));
 
-                var exceptionMessage = $"negatives not allowed - { numbers }";
+                var exceptionMessage = $"negatives not allowed - { negativeNumbers }";
 
                 throw new Exception(exceptionMessage);
             }

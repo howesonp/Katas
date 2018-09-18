@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace CodeKatas
 {
     public class StringCalculator
     {
-        private const char Delimiter = ',';
-
         public int Add(string stringNumber)
         {
             if (string.IsNullOrEmpty(stringNumber))
@@ -14,11 +11,11 @@ namespace CodeKatas
                 return 0;
             }
 
-            stringNumber.ReplaceNewLinesWithDefaultDelimiter();
+            var stringNumbersWithoutNewLines = stringNumber.ReplaceNewLinesWithDefaultDelimiter();
 
-            var stringNumbersArray = stringNumber.SimplifyDelimitersWithDefault();
+            var stringNumbers = stringNumbersWithoutNewLines.SimplifyDelimitersWithDefault();
 
-            var numbers = stringNumbersArray.ConvertToNumbers();
+            var numbers = stringNumbers.ConvertToNumbers();
 
             numbers.CheckForNegatives();
 

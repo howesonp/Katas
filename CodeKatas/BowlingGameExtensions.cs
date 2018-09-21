@@ -20,5 +20,15 @@
         {
             return ballThrow == SPARE;
         }
+
+        public static string GetFirstThrow(this string frame)
+        {
+            return frame.Substring(0, 1);
+        }
+
+        public static string GetSecondThrow(this string frame)
+        {
+            return frame.Substring(1, 1);
+        }
     }
 }

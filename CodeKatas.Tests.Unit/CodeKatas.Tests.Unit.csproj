@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArabicToRomanNumeralShould.cs" />
     <Compile Include="BowlingGameShould.cs" />
     <Compile Include="CalculationExtensionShould.cs" />
     <Compile Include="FizzBuzzGameShould.cs" />

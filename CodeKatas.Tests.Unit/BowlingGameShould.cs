@@ -55,8 +55,6 @@ namespace CodeKatas.Tests.Unit
         }
 
         [TestCase("X-|--|--|--|--|--|--|--|--|--||--", 10)]
-        [TestCase("/-|--|--|--|--|--|--|--|--|--||--", 10)]
-        [TestCase("-X|--|--|--|--|--|--|--|--|--||--", 10)]
         [TestCase("-/|--|--|--|--|--|--|--|--|--||--", 10)]
         public void ReturnTen_WhenScoring_AndFirstOrSecondThrowScoresAStrikeOrSpare(string game, int expectedScore)
         {
@@ -75,7 +73,7 @@ namespace CodeKatas.Tests.Unit
         }
 
         [TestCase("X-|--|--|--|--|--|--|--|--|--||--", 10)]
-        [TestCase("X-|--|X-|--|--|--|X-|--|--|--||--", 30)]
+        [TestCase("X-|--|23|--|--|--|2-|--|--|--||--", 17)]
         public void ReturnScore_WhenScoring_AndStrikeIsHitOnFirstThrow(string game, int expectedScore)
         {
             var actualScore = _bowlingGame.Score(game);
@@ -84,7 +82,8 @@ namespace CodeKatas.Tests.Unit
         }
 
         [TestCase("X-|5-|--|--|--|--|--|--|--|--||--", 20)]
-        public void ReturnTotalScoreOfTwenty_WhenScoring_AndStrikeInFirstFrameThen5(string game, int expectedScore)
+        [TestCase("X-|X-|X-|--|--|--|--|--|--|--||--", 60)]
+        public void ReturnTotalScore_WhenScoring_AndStrikeInFirstFrameThenScore(string game, int expectedScore)
         {
             var actualScore = _bowlingGame.Score(game);
 

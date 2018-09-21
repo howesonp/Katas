@@ -82,8 +82,16 @@ namespace CodeKatas.Tests.Unit
         }
 
         [TestCase("X-|5-|--|--|--|--|--|--|--|--||--", 20)]
-        [TestCase("X-|X-|X-|--|--|--|--|--|--|--||--", 60)]
+        [TestCase("X-|X-|X-|11|--|--|--|--|--|--||--", 65)]
         public void ReturnTotalScore_WhenScoring_AndStrikeInFirstFrameThenScore(string game, int expectedScore)
+        {
+            var actualScore = _bowlingGame.Score(game);
+
+            actualScore.Should().Be(expectedScore);
+        }
+
+        [TestCase("-/|5-|--|--|--|--|--|--|--|--||--", 20)]
+        public void ReturnTotalScore_WhenScoring_AndSpareInFirstFrameThenScore(string game, int expectedScore)
         {
             var actualScore = _bowlingGame.Score(game);
 

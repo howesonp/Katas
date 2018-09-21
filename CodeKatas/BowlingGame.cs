@@ -117,11 +117,10 @@ namespace CodeKatas
                     currentFrameScore.FirstThrowScore += AddNextTwoScoringRolls(scoreTracker, currentFrame);
 
                 }
-                //if (currentFrameScore.SecondThrow.IsSpare())
-                //{
-                //    currentFrameScore.FirstThrowScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
-
-                //}
+                if (currentFrameScore.SecondThrow.IsSpare())
+                {
+                    currentFrameScore.SecondThrowScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
+                }
             }
         }
 
@@ -140,12 +139,20 @@ namespace CodeKatas
                 }
                 else
                 {
-                    returnNumber += thisFrame.FrameScore;
+                    returnNumber += returnNumber == 10 ? thisFrame.FirstThrowScore : thisFrame.FrameScore;
+
                     break;
                 }
             }
 
             return returnNumber;
+        }
+
+        private int AddNextOneScoringRoll(Dictionary<int, Frame> scoreTracker, Frame currentFrame)
+        {
+            var nextFrame = scoreTracker.Skip(currentFrame.FrameNumber + 1).Take(1);
+
+            return nextFrame.FirstOrDefault().Value.FirstThrowScore;
         }
     }
 

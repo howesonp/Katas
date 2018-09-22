@@ -22,11 +22,12 @@ namespace CodeKatas
             var totalScore = 0;
         
             ScoreAllFrames(frames);
-            AddStrikesAdditionalPoints(frames);
+            AddAllAdditionalPoints(frames);
 
             foreach (var frame in _scoreTracker)
             {
-                totalScore += frame.Value.FrameScore;
+                //totalScore += frame.Value.FrameScore;
+                totalScore += frame.Value.AccumulatedFrameScore;
             }
 
             return totalScore;
@@ -40,11 +41,11 @@ namespace CodeKatas
             }
         }
 
-        private void AddStrikesAdditionalPoints(string[] frames)
+        private void AddAllAdditionalPoints(string[] frames)
         {
             for (var frame = 0; frame < frames.Length; frame++)
             {
-                AddAdditionalPoints(ref _scoreTracker, _scoreTracker[frame]);
+                AddPointsForFrame(ref _scoreTracker, _scoreTracker[frame]);
             }
         }
 
@@ -73,15 +74,20 @@ namespace CodeKatas
             if (currentFrame.FirstThrow.IsMiss())
             {
                 currentFrame.FirstThrowScore = 0;
+                currentFrame.AccumulatedFrameScore += 0;
             }
             else if (currentFrame.FirstThrow.IsStrike())
             {
                 currentFrame.HasStrike = true;
                 currentFrame.FirstThrowScore = 10;
+                currentFrame.AccumulatedFrameScore += 10;
             }
             else
             {
-                currentFrame.FirstThrowScore = int.Parse(currentFrame.FirstThrow);
+                var pinsHit = int.Parse(currentFrame.FirstThrow);
+
+                currentFrame.FirstThrowScore = pinsHit;
+                currentFrame.AccumulatedFrameScore += pinsHit;
             }
         }
 
@@ -95,31 +101,38 @@ namespace CodeKatas
             if (currentFrame.SecondThrow.IsMiss())
             {
                 currentFrame.SecondThrowScore = 0;
+                currentFrame.AccumulatedFrameScore += 0;
             }
             else if (currentFrame.SecondThrow.IsSpare())
             {
                 currentFrame.HasSpare = true;
                 currentFrame.SecondThrowScore = 10;
+                currentFrame.AccumulatedFrameScore = 10;
             }
             else
             {
-                currentFrame.SecondThrowScore = int.Parse(currentFrame.SecondThrow);
+                var pinsHit = int.Parse(currentFrame.SecondThrow);
+
+                currentFrame.SecondThrowScore = pinsHit;
+                currentFrame.AccumulatedFrameScore += pinsHit;
             }
         }
 
-        private void AddAdditionalPoints(ref Dictionary<int, Frame> scoreTracker, Frame currentFrame)
+        private void AddPointsForFrame(ref Dictionary<int, Frame> scoreTracker, Frame currentFrame)
         {
             var currentFrameScore = scoreTracker[currentFrame.FrameNumber];
             if (currentFrame.FrameNumber <= 8)
             {
                 if (currentFrameScore.FirstThrow.IsStrike())
                 {
-                    currentFrameScore.FirstThrowScore += AddNextTwoScoringRolls(scoreTracker, currentFrame);
+                    //currentFrameScore.FirstThrowScore += AddNextTwoScoringRolls(scoreTracker, currentFrame);
+                    currentFrameScore.AccumulatedFrameScore += AddNextTwoScoringRolls(scoreTracker, currentFrame);
 
                 }
                 if (currentFrameScore.SecondThrow.IsSpare())
                 {
-                    currentFrameScore.SecondThrowScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
+                    //currentFrameScore.SecondThrowScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
+                    currentFrameScore.AccumulatedFrameScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
                 }
             }
         }
@@ -139,7 +152,15 @@ namespace CodeKatas
                 }
                 else
                 {
-                    returnNumber += returnNumber == 10 ? thisFrame.FirstThrowScore : thisFrame.FrameScore;
+                    if (returnNumber == 10)
+                    {
+                        returnNumber += thisFrame.FirstThrowScore;
+                    }
+
+                    else
+                    {
+                        returnNumber += thisFrame.FrameScore;
+                    }
 
                     break;
                 }
@@ -158,6 +179,9 @@ namespace CodeKatas
 
     public class Frame
     {
+        //public Throw FirstThrow { get; set; }
+        //public Throw SecondThrow { get; set; }
+
         public int FrameNumber { get; set; }
         public string FirstThrow{ get; set; }
         public int FirstThrowScore{ get; set; }
@@ -165,11 +189,21 @@ namespace CodeKatas
         public int SecondThrowScore { get; set; }
         public bool HasStrike { get; set; }
         public bool HasSpare { get; set; }
-        public int FrameScore => FirstThrowScore + SecondThrowScore;
+        //public int FrameScore => FirstThrowScore + SecondThrowScore;
+
+        public int AccumulatedFrameScore;
     }
 
     public class Game
     {
+        public int[] RunningScore { get; set; }
         public List<Frame> Frames { get; set; }
+    }
+
+    public class Throw
+    {
+        public string StringThrow { get; set; }
+        public int Score { get; set; }
+        public bool IsStrike { get; set; }
     }
 }

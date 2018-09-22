@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace CodeKatas.Tests.Unit
@@ -91,6 +85,9 @@ namespace CodeKatas.Tests.Unit
         }
 
         [TestCase("-/|5-|--|--|--|--|--|--|--|--||--", 20)]
+        [TestCase("-/|51|--|--|--|--|--|--|--|--||--", 21)]
+        [TestCase("2/|5-|--|--|--|--|--|--|--|--||--", 20)]
+        [TestCase("2/|-4|5/|X-|--|--|--|--|--|--||--", 44)]
         public void ReturnTotalScore_WhenScoring_AndSpareInFirstFrameThenScore(string game, int expectedScore)
         {
             var actualScore = _bowlingGame.Score(game);

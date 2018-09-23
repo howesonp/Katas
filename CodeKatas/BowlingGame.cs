@@ -2,208 +2,195 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
 namespace CodeKatas
 {
     public class BowlingGame
     {
-        private const string Miss = "-";
-        private static Dictionary<int, Frame> _scoreTracker;
+        //private const string Miss = "-";
+        private const int MissScore = 0;
+        private const int StrikeScore = 10;
+        //private static Dictionary<int, Frame> _scoreTracker;
+
+        private static Game _runningScore;
 
         public int Score(string game)
         {
-            _scoreTracker = null;
-            _scoreTracker = new Dictionary<int, Frame>();
+            //_scoreTracker = null;
+            //_scoreTracker = new Dictionary<int, Frame>();
+
+            _runningScore = null;
+            _runningScore = new Game();
 
             var removeDoubleSlashInFrames = game.Replace("||", "|");
-            var frames = removeDoubleSlashInFrames.Split('|').Take(10).ToArray();
-            var bonusFrame = frames.Skip(10).Take(1);
+            //var frames = removeDoubleSlashInFrames.Split('|').Take(10).ToArray();
+            GetFrameScores(removeDoubleSlashInFrames, ref _runningScore);
+            var totalScoreNew = GetTotalFrameScore(ref _runningScore);
 
-            var totalScore = 0;
+            //var bonusFrame = frames.Skip(10).Take(1);
+
+            //var totalScore = 0;
         
-            ScoreAllFrames(frames);
-            AddAllAdditionalPoints(frames);
+            //ScoreAllFrames(frames);
+            //AddAllAdditionalPoints(frames);
 
-            foreach (var frame in _scoreTracker)
+            //foreach (var frame in _scoreTracker)
+            //{
+            //    //totalScore += frame.Value.FrameScore;
+            //    totalScore += frame.Value.AccumulatedFrameScore;
+            //}
+
+            return totalScoreNew;
+        }
+
+        private void  GetFrameScores(string frameScoresAsString, ref Game _runningScore)
+        {
+            var stringFrameScoreArray = frameScoresAsString.Split('|').Take(10).ToArray();
+
+            for (var frameNumber = 0; frameNumber < stringFrameScoreArray.Length; frameNumber++)
             {
-                //totalScore += frame.Value.FrameScore;
-                totalScore += frame.Value.AccumulatedFrameScore;
+                var frame = stringFrameScoreArray[frameNumber];
+                var firstThrow = GetFirstThrowScore(frame, frameNumber);
+     
+                var secondThrow = GetSecondThrowScore(frame, frameNumber, firstThrow.Score);
+
+                var currentFrame = new Frame
+                {
+                    FrameNumber = frameNumber,
+                    FirstThrow = firstThrow,
+                    SecondThrow = secondThrow
+                };
+
+                _runningScore.Frames.Add(currentFrame);
+            }
+        }
+
+        private int GetTotalFrameScore(ref Game runningScore)
+        {
+            var totalScore = 0;
+
+            for (int i = 0; i < runningScore.Frames.Count; i++)
+            {
+                if (runningScore.Frames[i].HasStrike)
+                {
+                    totalScore += runningScore.Frames[i].FrameScore + runningScore.NextTwoScoringThrows(i);
+                }
+
+                else if (runningScore.Frames[i].SecondThrow.StringThrow.IsSpare())
+                {
+                    totalScore += runningScore.Frames[i].FrameScore + runningScore.NextScoringThrow(i);
+                }
+                else
+                {
+                    totalScore += runningScore.Frames[i].FrameScore;
+                }
             }
 
             return totalScore;
         }
 
-        private void ScoreAllFrames(string[] frames)
+        private static Throw GetFirstThrowScore(string frame, int frameNumber)
         {
-            for (int frame = 0; frame < frames.Length; frame++)
-            {
-                ScoreFrame(frames[frame], frame);
-            }
-        }
+            var firstThrow = frame.GetFirstThrow();
+            var firstThrowScore = 0;
 
-        private void AddAllAdditionalPoints(string[] frames)
-        {
-            for (var frame = 0; frame < frames.Length; frame++)
+            if (firstThrow.IsMiss())
             {
-                AddPointsForFrame(ref _scoreTracker, _scoreTracker[frame]);
-            }
-        }
-
-        private void ScoreFrame(string frame, int frameNumber)
-        {
-            if (string.IsNullOrEmpty(frame))
-            {
-                return;
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = MissScore,
+                    StringThrow = firstThrow
+                };
             }
 
-            var currentFrame = new Frame
+            if (firstThrow.IsStrike())
+            {
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = StrikeScore,
+                    StringThrow = firstThrow
+                };
+            }
+            firstThrowScore = int.Parse(firstThrow);
+
+            return new Throw
             {
                 FrameNumber = frameNumber,
-                FirstThrow = frame.GetFirstThrow(),
-                SecondThrow = frame.GetSecondThrow()
+                Score = firstThrowScore,
+                StringThrow = firstThrow
             };
 
-            ScoreFirstRoll(ref currentFrame);
-            ScoreSecondRoll(ref currentFrame);
-
-            _scoreTracker.Add(frameNumber, currentFrame);
+            //return firstThrowScore;
         }
 
-        private void ScoreFirstRoll(ref Frame currentFrame)
+        private static Throw GetSecondThrowScore(string frame, int frameNumber, int firstThrowScore)
         {
-            if (currentFrame.FirstThrow.IsMiss())
-            {
-                currentFrame.FirstThrowScore = 0;
-                currentFrame.AccumulatedFrameScore += 0;
-            }
-            else if (currentFrame.FirstThrow.IsStrike())
-            {
-                currentFrame.HasStrike = true;
-                currentFrame.FirstThrowScore = 10;
-                currentFrame.AccumulatedFrameScore += 10;
-            }
-            else
-            {
-                var pinsHit = int.Parse(currentFrame.FirstThrow);
+            var secondThrow = frame.GetSecondThrow();
 
-                currentFrame.FirstThrowScore = pinsHit;
-                currentFrame.AccumulatedFrameScore += pinsHit;
-            }
-        }
-
-        private void ScoreSecondRoll(ref Frame currentFrame)
-        {
-            if (currentFrame.HasStrike)
+            if (secondThrow.IsMiss())
             {
-                return;
-            }
-
-            if (currentFrame.SecondThrow.IsMiss())
-            {
-                currentFrame.SecondThrowScore = 0;
-                currentFrame.AccumulatedFrameScore += 0;
-            }
-            else if (currentFrame.SecondThrow.IsSpare())
-            {
-                currentFrame.HasSpare = true;
-                currentFrame.SecondThrowScore = 10;
-                currentFrame.AccumulatedFrameScore = 10;
-            }
-            else
-            {
-                var pinsHit = int.Parse(currentFrame.SecondThrow);
-
-                currentFrame.SecondThrowScore = pinsHit;
-                currentFrame.AccumulatedFrameScore += pinsHit;
-            }
-        }
-
-        private void AddPointsForFrame(ref Dictionary<int, Frame> scoreTracker, Frame currentFrame)
-        {
-            var currentFrameScore = scoreTracker[currentFrame.FrameNumber];
-            if (currentFrame.FrameNumber <= 8)
-            {
-                if (currentFrameScore.FirstThrow.IsStrike())
+                return new Throw
                 {
-                    //currentFrameScore.FirstThrowScore += AddNextTwoScoringRolls(scoreTracker, currentFrame);
-                    currentFrameScore.AccumulatedFrameScore += AddNextTwoScoringRolls(scoreTracker, currentFrame);
+                    FrameNumber = frameNumber,
+                    Score = MissScore,
+                    StringThrow = secondThrow
+                };
 
-                }
-                if (currentFrameScore.SecondThrow.IsSpare())
-                {
-                    //currentFrameScore.SecondThrowScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
-                    currentFrameScore.AccumulatedFrameScore += AddNextOneScoringRoll(scoreTracker, currentFrame);
-                }
             }
-        }
 
-        private int AddNextTwoScoringRolls(Dictionary<int, Frame> scoreTracker, Frame currentFrame)
-        {
-            var returnNumber = 0;
-            var remainingFrames = scoreTracker.Skip(currentFrame.FrameNumber + 1).Take(2);
-
-            foreach (var frame in remainingFrames)
+            if (secondThrow.IsSpare())
             {
-                var thisFrame = frame.Value;
-
-                if (thisFrame.HasStrike)
+                return new Throw
                 {
-                    returnNumber += 10;
-                }
-                else
-                {
-                    if (returnNumber == 10)
-                    {
-                        returnNumber += thisFrame.FirstThrowScore;
-                    }
-
-                    else
-                    {
-                        returnNumber += thisFrame.FrameScore;
-                    }
-
-                    break;
-                }
+                    FrameNumber = frameNumber,
+                    Score = StrikeScore - firstThrowScore,
+                    StringThrow = secondThrow
+                };
             }
-
-            return returnNumber;
-        }
-
-        private int AddNextOneScoringRoll(Dictionary<int, Frame> scoreTracker, Frame currentFrame)
-        {
-            var nextFrame = scoreTracker.Skip(currentFrame.FrameNumber + 1).Take(1);
-
-            return nextFrame.FirstOrDefault().Value.FirstThrowScore;
+            return new Throw
+            {
+                FrameNumber = frameNumber,
+                Score = int.Parse(secondThrow),
+                StringThrow = secondThrow
+            };
         }
     }
 
     public class Frame
     {
-        //public Throw FirstThrow { get; set; }
-        //public Throw SecondThrow { get; set; }
+        public Frame()
+        {
+            FirstThrow = new Throw();
+            SecondThrow = new Throw();
+        }
 
         public int FrameNumber { get; set; }
-        public string FirstThrow{ get; set; }
-        public int FirstThrowScore{ get; set; }
-        public string SecondThrow { get; set; }
-        public int SecondThrowScore { get; set; }
-        public bool HasStrike { get; set; }
-        public bool HasSpare { get; set; }
-        //public int FrameScore => FirstThrowScore + SecondThrowScore;
 
-        public int AccumulatedFrameScore;
+        public Throw FirstThrow { get; set; }
+        public Throw SecondThrow { get; set; }
+
+        public int FrameScore => FirstThrow.Score + SecondThrow.Score;
+
+        public bool HasStrike => FirstThrow.Score == 10;
     }
 
     public class Game
     {
-        public int[] RunningScore { get; set; }
+        public Game()
+        {
+            Frames = new List<Frame>();
+        }
+
         public List<Frame> Frames { get; set; }
     }
 
     public class Throw
     {
+        public int FrameNumber { get; set; }
         public string StringThrow { get; set; }
         public int Score { get; set; }
-        public bool IsStrike { get; set; }
     }
 }

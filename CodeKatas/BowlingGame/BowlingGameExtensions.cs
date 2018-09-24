@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeKatas
@@ -48,10 +47,7 @@ namespace CodeKatas
                 concurrentScores.Add(frame.SecondThrow.Score);
             });
 
-            //var removeFirstThrowMisses = concurrentScores.Where(e => e != 0);
-
             return concurrentScores.FirstOrDefault();
-
         }
 
         public static int NextTwoScoringThrows(this Game runningScore, int currentFrame)
@@ -65,7 +61,7 @@ namespace CodeKatas
 
                 if (frame.HasStrike)
                 {
-                    scoreToAdd += remainingFrames[1 + 1].FirstThrow.Score;
+                    scoreToAdd += remainingFrames[1].FirstThrow.Score;
                 }
                 else
                 {

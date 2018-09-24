@@ -40,9 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BowlingGame.cs" />
+    <Compile Include="ArabicToRomanNumeral.cs" />
+    <Compile Include="BowlingGame\BowlingGame.cs" />
+    <Compile Include="BowlingGame\Frame.cs" />
+    <Compile Include="BowlingGame\Game.cs" />
+    <Compile Include="BowlingGame\Throw.cs" />
     <Compile Include="StringCalculatorExtensions.cs" />
-    <Compile Include="BowlingGameExtensions.cs" />
+    <Compile Include="BowlingGame\BowlingGameExtensions.cs" />
     <Compile Include="CalculationExtensions.cs" />
     <Compile Include="FizzBuzzGame.cs" />
     <Compile Include="StringCalculator.cs" />

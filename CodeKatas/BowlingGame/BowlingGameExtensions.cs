@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace CodeKatas
 {
@@ -17,44 +16,70 @@ namespace CodeKatas
             scoreCard.StringGame = stringGame.Replace("||", "|");
         }
 
-        public static void GetFrameScoresAsNumbers(this ScoreCard scoreCard)
+        public static void CreateAllFramesFromString(this ScoreCard scoreCard)
         {
             var stringFrameScoreArray = scoreCard.StringGame.Split('|').Take(11).ToArray();
 
             for (var frameNumber = 0; frameNumber < stringFrameScoreArray.Length; frameNumber++)
             {
-                var frame = stringFrameScoreArray[frameNumber];
-                var currentFrame = GetFrameScore(frame, frameNumber);
+                var stringFrame = stringFrameScoreArray[frameNumber];
+                var currentFrame = CreateFrame(stringFrame, frameNumber);
 
                 scoreCard.Frames.Add(currentFrame);
             }
         }
 
-        public static void GetTotalFrameScore(this ScoreCard scoreCard)
+        private static Frame CreateFrame(string frame, int frameNumber)
+        {
+            var firstThrow = GetFirstThrow(frame, frameNumber);
+
+            var secondThrow = GetSecondThrow(frame, frameNumber, firstThrow.Score);
+
+            var currentFrame = new Frame 
+            {
+                FrameNumber = frameNumber,
+                FirstThrow = firstThrow,
+                SecondThrow = secondThrow,
+            };
+            return currentFrame;
+        }
+
+        private static Throw GetFirstThrow(string frame, int frameNumber)
+        {
+            var firstThrow = frame.GetFirstThrowString();
+
+            if (firstThrow.IsMiss())
+            {
+                return new Throw(frameNumber, MissScore, firstThrow);
+            }
+
+            return firstThrow.IsStrike()
+                ? new Throw(frameNumber, StrikeScore, firstThrow)
+                : new Throw(frameNumber, int.Parse(firstThrow), firstThrow);
+        }
+
+        private static Throw GetSecondThrow(string frame, int frameNumber, int firstThrowScore)
+        {
+            var secondThrow = frame.GetSecondThrowString();
+
+            if (secondThrow.IsMiss())
+            {
+                return new Throw(frameNumber, MissScore, secondThrow);
+            }
+
+            if (secondThrow.IsSpare())
+            {
+                return new Throw(frameNumber, StrikeScore - firstThrowScore, secondThrow);
+            }
+
+            return secondThrow.IsStrike()
+                ? new Throw(frameNumber, StrikeScore, secondThrow)
+                : new Throw(frameNumber, int.Parse(secondThrow), secondThrow);
+        }
+
+        public static void GetTotalFrameScoreIncludingBonus(this ScoreCard scoreCard)
         {
             scoreCard.Score = 0;
-
-            //scoreCard.Frames.ForEach(frame =>
-            //{
-            //    if (frame.IsLastFrame && !(frame.HasStrike || frame.HasSpare))
-            //    {
-            //        return;
-            //    }
-
-            //    if (frame.HasStrike)
-            //    {
-            //        scoreCard.Score = frame.FrameScore + scoreCard.NextTwoScoringThrows(frame.FrameNumber);
-            //    }
-
-            //    else if (frame.SecondThrow.StringThrow.IsSpare())
-            //    {
-            //        scoreCard.Score += frame.FrameScore + scoreCard.NextScoringThrow(frame.FrameNumber);
-            //    }
-            //    else
-            //    {
-            //        scoreCard.Score += frame.FrameScore;
-            //    }
-            //});
 
             foreach (var currentFrame in scoreCard.Frames)
             {
@@ -94,121 +119,6 @@ namespace CodeKatas
             scoreCard.Score += score;
         }
 
-        private static Frame GetFrameScore(string frame, int frameNumber)
-        {
-            var firstThrow = GetFirstThrowScore(frame, frameNumber);
-
-            var secondThrow = GetSecondThrowScore(frame, frameNumber, firstThrow.Score);
-
-            var currentFrame = new Frame
-            {
-                FrameNumber = frameNumber,
-                FirstThrow = firstThrow,
-                IsBonusFrame = frameNumber == 10,
-                SecondThrow = secondThrow,
-            };
-            return currentFrame;
-        }
-
-        private static Throw GetFirstThrowScore(string frame, int frameNumber)
-        {
-            var firstThrow = frame.GetFirstThrow();
-
-            if (firstThrow.IsMiss())
-            {
-                return new Throw
-                {
-                    FrameNumber = frameNumber,
-                    Score = MissScore,
-                    StringThrow = firstThrow
-                };
-            }
-
-            if (firstThrow.IsStrike())
-            {
-                return new Throw
-                {
-                    FrameNumber = frameNumber,
-                    Score = StrikeScore,
-                    StringThrow = firstThrow
-                };
-            }
-
-            return new Throw
-            {
-                FrameNumber = frameNumber,
-                Score = int.Parse(firstThrow),
-                StringThrow = firstThrow
-            };
-        }
-
-        private static Throw GetSecondThrowScore(string frame, int frameNumber, int firstThrowScore)
-        {
-            var secondThrow = frame.GetSecondThrow();
-
-            if (secondThrow.IsMiss())
-            {
-                return new Throw
-                {
-                    FrameNumber = frameNumber,
-                    Score = MissScore,
-                    StringThrow = secondThrow
-                };
-            }
-
-            if (secondThrow.IsSpare())
-            {
-                return new Throw
-                {
-                    FrameNumber = frameNumber,
-                    Score = StrikeScore - firstThrowScore,
-                    StringThrow = secondThrow
-                };
-            }
-
-            if (secondThrow.IsStrike())
-            {
-                return new Throw
-                {
-                    FrameNumber = frameNumber,
-                    Score = StrikeScore,
-                    StringThrow = secondThrow
-                };
-            }
-
-            return new Throw
-            {
-                FrameNumber = frameNumber,
-                Score = int.Parse(secondThrow),
-                StringThrow = secondThrow
-            };
-        }
-
-        public static bool IsMiss(this string ballThrow)
-        {
-            return ballThrow == MISS;
-        }
-
-        public static bool IsStrike(this string ballThrow)
-        {
-            return ballThrow == STRIKE;
-        }
-
-        public static bool IsSpare(this string ballThrow)
-        {
-            return ballThrow == SPARE;
-        }
-
-        public static string GetFirstThrow(this string frame)
-        {
-            return frame.Substring(0, 1);
-        }
-
-        public static string GetSecondThrow(this string frame)
-        {
-            return frame.Substring(1, 1);
-
-        }
 
         public static int NextScoringThrow(this ScoreCard scoreCard, int currentFrame)
         {
@@ -228,7 +138,7 @@ namespace CodeKatas
         public static int NextTwoScoringThrows(this ScoreCard scoreCard, int currentFrame)
         {
             var scoreToAdd = 0;
-            var remainingFrames = scoreCard.Frames.Where(e => e.FrameNumber > currentFrame).ToList();
+            var remainingFrames = scoreCard.Frames.Where(e => e.FrameNumber > currentFrame).OrderBy(frame =>frame.FrameNumber).ToList();
 
             foreach (var frame in remainingFrames)
             {
@@ -247,6 +157,32 @@ namespace CodeKatas
             }
 
             return scoreToAdd;
+        }
+
+        public static bool IsMiss(this string ballThrow)
+        {
+            return ballThrow == MISS;
+        }
+
+        public static bool IsStrike(this string ballThrow)
+        {
+            return ballThrow == STRIKE;
+        }
+
+        public static bool IsSpare(this string ballThrow)
+        {
+            return ballThrow == SPARE;
+        }
+
+        public static string GetFirstThrowString(this string frame)
+        {
+            return frame.Substring(0, 1);
+        }
+
+        public static string GetSecondThrowString(this string frame)
+        {
+            return frame.Substring(1, 1);
+
         }
     }
 }

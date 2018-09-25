@@ -4,12 +4,12 @@
     {
         private static ScoreCard _scoreCard;
 
-        public int Score(string game)
+        public int Score(string stringGame)
         {
             _scoreCard = new ScoreCard();
-            _scoreCard.ReplaceDoublePipeInStringGame(game);
-            _scoreCard.ScoresAllFramesAsNumbers();
-            _scoreCard.GetTotalFrameScore();
+            _scoreCard.ReplaceDoublePipeInStringGame(stringGame);
+            _scoreCard.CreateAllFramesFromString();
+            _scoreCard.GetTotalFrameScoreIncludingBonus();
 
             return _scoreCard.Score;
         }

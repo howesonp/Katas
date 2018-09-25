@@ -15,5 +15,7 @@
         public bool HasStrike => FirstThrow.Score == 10;
         public bool HasSpare => SecondThrow.StringThrow == "/";
         public bool IsLastFrame { get; set; }
+        public bool IsBonusFrame { get; set; }
+
     }
 }

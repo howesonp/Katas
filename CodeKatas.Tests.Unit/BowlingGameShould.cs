@@ -94,5 +94,33 @@ namespace CodeKatas.Tests.Unit
 
             actualScore.Should().Be(expectedScore);
         }
+
+        [TestCase("X-|5-|--|--|--|--|--|--|--|X-||11", 32)]
+        public void ReturnTotalScore_WhenScoring_AndStrikeInFinalFrame(string game, int expectedScore)
+        {
+            var actualScore = _bowlingGame.Score(game);
+
+            actualScore.Should().Be(expectedScore);
+        }
+
+        [TestCase("X-|5-|--|--|--|--|--|--|--|2/||11", 31)]
+        public void ReturnTotalScore_WhenScoring_AndSpareInFinalFrame(string game, int expectedScore)
+        {
+            var actualScore = _bowlingGame.Score(game);
+
+            actualScore.Should().Be(expectedScore);
+        }
+
+        [TestCase("X-|5-|--|--|--|--|--|--|--|2-||11", 22)]
+        [TestCase("X-|5-|--|--|--|--|--|--|--|27||18", 29)]
+        [TestCase("X-|X-|X-|X-|X-|X-|X-|X-|X-|X-||XX", 300)]
+        [TestCase("--|--|--|--|--|--|--|--|--|X-||XX", 30)]
+        [TestCase("--|--|--|--|--|--|--|--|--|2/||8X", 18)]
+        public void ReturnTotalScoreExcludingBonusRound_WhenScoring_AndNoStrikeOrSpareInFinalFrame(string game, int expectedScore)
+        {
+            var actualScore = _bowlingGame.Score(game);
+
+            actualScore.Should().Be(expectedScore);
+        }
     }
 }

@@ -2,15 +2,17 @@
 
 namespace CodeKatas
 {
-    public class Game
+    public class ScoreCard
     {
-        public Game()
+        public ScoreCard()
         {
             Frames = new List<Frame>();
         }
 
         public List<Frame> Frames { get; set; }
 
-        public int GameScore { get; set; }
+        public int Score { get; set; }
+
+        public string StringGame;
     }
 }

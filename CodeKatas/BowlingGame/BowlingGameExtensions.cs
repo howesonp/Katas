@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace CodeKatas
 {
@@ -8,6 +9,180 @@ namespace CodeKatas
         private const string MISS = "-";
         private const string SPARE = "/";
         private const string STRIKE = "X";
+        private const int MissScore = 0;
+        private const int StrikeScore = 10;
+
+        public static void ReplaceDoublePipeInStringGame(this ScoreCard scoreCard, string stringGame)
+        {
+            scoreCard.StringGame = stringGame.Replace("||", "|");
+        }
+
+        public static void GetFrameScoresAsNumbers(this ScoreCard scoreCard)
+        {
+            var stringFrameScoreArray = scoreCard.StringGame.Split('|').Take(11).ToArray();
+
+            for (var frameNumber = 0; frameNumber < stringFrameScoreArray.Length; frameNumber++)
+            {
+                var frame = stringFrameScoreArray[frameNumber];
+                var currentFrame = GetFrameScore(frame, frameNumber);
+
+                scoreCard.Frames.Add(currentFrame);
+            }
+        }
+
+        public static void GetTotalFrameScore(this ScoreCard scoreCard)
+        {
+            scoreCard.Score = 0;
+
+            //scoreCard.Frames.ForEach(frame =>
+            //{
+            //    if (frame.IsLastFrame && !(frame.HasStrike || frame.HasSpare))
+            //    {
+            //        return;
+            //    }
+
+            //    if (frame.HasStrike)
+            //    {
+            //        scoreCard.Score = frame.FrameScore + scoreCard.NextTwoScoringThrows(frame.FrameNumber);
+            //    }
+
+            //    else if (frame.SecondThrow.StringThrow.IsSpare())
+            //    {
+            //        scoreCard.Score += frame.FrameScore + scoreCard.NextScoringThrow(frame.FrameNumber);
+            //    }
+            //    else
+            //    {
+            //        scoreCard.Score += frame.FrameScore;
+            //    }
+            //});
+
+            foreach (var currentFrame in scoreCard.Frames)
+            {
+                if (!currentFrame.IsBonusFrame)
+                {
+                    scoreCard.ScoreCurrentFrame(currentFrame);
+                }
+            }
+        }
+
+        private static void ScoreCurrentFrame(this ScoreCard scoreCard, Frame currentFrame)
+        {
+            if (currentFrame.HasStrike)
+            {
+                scoreCard.ScoreStrike(currentFrame);
+            }
+
+            else if (currentFrame.SecondThrow.StringThrow.IsSpare())
+            {
+                scoreCard.ScoreSpare(currentFrame);
+            }
+            else
+            {
+                scoreCard.Score += currentFrame.FrameScore;
+            }
+        }
+
+        private static void ScoreSpare(this ScoreCard scoreCard, Frame currentFrame)
+        {
+            scoreCard.Score += currentFrame.FrameScore + scoreCard.NextScoringThrow(currentFrame.FrameNumber);
+        }
+
+        private static void ScoreStrike(this ScoreCard scoreCard, Frame currentFrame)
+        {
+            var score = currentFrame.FrameScore + scoreCard.NextTwoScoringThrows(currentFrame.FrameNumber);
+
+            scoreCard.Score += score;
+        }
+
+        private static Frame GetFrameScore(string frame, int frameNumber)
+        {
+            var firstThrow = GetFirstThrowScore(frame, frameNumber);
+
+            var secondThrow = GetSecondThrowScore(frame, frameNumber, firstThrow.Score);
+
+            var currentFrame = new Frame
+            {
+                FrameNumber = frameNumber,
+                FirstThrow = firstThrow,
+                IsBonusFrame = frameNumber == 10,
+                SecondThrow = secondThrow,
+            };
+            return currentFrame;
+        }
+
+        private static Throw GetFirstThrowScore(string frame, int frameNumber)
+        {
+            var firstThrow = frame.GetFirstThrow();
+
+            if (firstThrow.IsMiss())
+            {
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = MissScore,
+                    StringThrow = firstThrow
+                };
+            }
+
+            if (firstThrow.IsStrike())
+            {
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = StrikeScore,
+                    StringThrow = firstThrow
+                };
+            }
+
+            return new Throw
+            {
+                FrameNumber = frameNumber,
+                Score = int.Parse(firstThrow),
+                StringThrow = firstThrow
+            };
+        }
+
+        private static Throw GetSecondThrowScore(string frame, int frameNumber, int firstThrowScore)
+        {
+            var secondThrow = frame.GetSecondThrow();
+
+            if (secondThrow.IsMiss())
+            {
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = MissScore,
+                    StringThrow = secondThrow
+                };
+            }
+
+            if (secondThrow.IsSpare())
+            {
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = StrikeScore - firstThrowScore,
+                    StringThrow = secondThrow
+                };
+            }
+
+            if (secondThrow.IsStrike())
+            {
+                return new Throw
+                {
+                    FrameNumber = frameNumber,
+                    Score = StrikeScore,
+                    StringThrow = secondThrow
+                };
+            }
+
+            return new Throw
+            {
+                FrameNumber = frameNumber,
+                Score = int.Parse(secondThrow),
+                StringThrow = secondThrow
+            };
+        }
 
         public static bool IsMiss(this string ballThrow)
         {
@@ -35,11 +210,11 @@ namespace CodeKatas
 
         }
 
-        public static int NextScoringThrow(this Game runningScore, int currentFrame)
+        public static int NextScoringThrow(this ScoreCard scoreCard, int currentFrame)
         {
             var concurrentScores = new List<int>();
     
-            var remainingFrames = runningScore.Frames.Where(e => e.FrameNumber > currentFrame).ToList();
+            var remainingFrames = scoreCard.Frames.Where(e => e.FrameNumber > currentFrame).ToList();
 
             remainingFrames.ForEach(frame =>
             {
@@ -50,16 +225,16 @@ namespace CodeKatas
             return concurrentScores.FirstOrDefault();
         }
 
-        public static int NextTwoScoringThrows(this Game runningScore, int currentFrame)
+        public static int NextTwoScoringThrows(this ScoreCard scoreCard, int currentFrame)
         {
             var scoreToAdd = 0;
-            var remainingFrames = runningScore.Frames.Where(e => e.FrameNumber > currentFrame).ToList();
+            var remainingFrames = scoreCard.Frames.Where(e => e.FrameNumber > currentFrame).ToList();
 
             foreach (var frame in remainingFrames)
             {
                 scoreToAdd += frame.FirstThrow.Score;
 
-                if (frame.HasStrike)
+                if (frame.HasStrike && !frame.IsBonusFrame)
                 {
                     scoreToAdd += remainingFrames[1].FirstThrow.Score;
                 }

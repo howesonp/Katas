@@ -43,7 +43,7 @@
     <Compile Include="ArabicToRomanNumeral.cs" />
     <Compile Include="BowlingGame\BowlingGame.cs" />
     <Compile Include="BowlingGame\Frame.cs" />
-    <Compile Include="BowlingGame\Game.cs" />
+    <Compile Include="BowlingGame\ScoreCard.cs" />
     <Compile Include="BowlingGame\Throw.cs" />
     <Compile Include="StringCalculatorExtensions.cs" />
     <Compile Include="BowlingGame\BowlingGameExtensions.cs" />

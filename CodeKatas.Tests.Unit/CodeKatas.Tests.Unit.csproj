@@ -59,6 +59,7 @@
     <Compile Include="IsTriangleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringCalculatorShould.cs" />
+    <Compile Include="TicTacToeShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -6,33 +6,15 @@ namespace CodeKatas.TicTacToe
 {
     public class TicTacToe
     {
-        //public Dictionary<int, string> Board { get; set; }
-
-        //public Board Board;
         public readonly Game Game;
+        public Player PlayerX;
+        public Player PlayerO;
 
         public TicTacToe()
         {
             Game = new Game();
-        }
-
-        public List<ValidationResult> TryTakeTurn(int position, string currentPlayer)
-        {
-            var validationResults = Game.CheckIfMoveValid(position, currentPlayer);
-
-            if (validationResults.All(validationResult => validationResult.IsValid))
-            {
-                MakeMove(position, currentPlayer);
-                return validationResults;
-            }
-
-            return validationResults;
-        }
-
-        private void MakeMove(int position, string currentPlayer)
-        {
-            Game.Board[position] = currentPlayer;
-            Game.PreviousTurn = currentPlayer;
+            PlayerX = new Player("X", Game);
+            PlayerO = new Player("O", Game);
         }
     }
 }

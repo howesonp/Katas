@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeKatas.TicTacToe
 {
@@ -15,34 +13,22 @@ namespace CodeKatas.TicTacToe
         public bool IsDraw { get; set; }
 
         public bool IsFirstMove { get; set; }
+    
+        public Board Board { get; }
+
+        public string PreviousTurn = string.Empty;
 
         public Game()
         {
-            Board = new Dictionary<int, string>
-            {
-                {1, String.Empty},
-                {2, String.Empty},
-                {3, String.Empty},
-                {4, String.Empty},
-                {5, String.Empty},
-                {6, String.Empty},
-                {7, String.Empty},
-                {8, String.Empty},
-                {9, String.Empty}
-            };
+            Board = new Board();
+            
             IsFinished = false;
             IsDraw = false;
             IsFirstMove = true;
             HasWinner = false;
         }
 
-        public Dictionary<int, string> Board { get; }
-
-        private const string Nought = "O";
-        private const string Cross = "X";
-        public string PreviousTurn = String.Empty;
-
-        //public string[] players = { "X", "O" };
+  
 
         public List<ValidationResult> CheckIfMoveValid(int position, string currentPlayer)
         {
@@ -63,7 +49,7 @@ namespace CodeKatas.TicTacToe
 
         private ValidationResult CheckGameIsNotOver()
         {
-            if (Board.All(e => e.Value != string.Empty))
+            if (Board.Squares.All(e => e.Value != string.Empty))
             {
                 IsFinished = true;
                 return new ValidationResult { IsValid = false, ValidationMessage = "Game is over" };
@@ -84,7 +70,7 @@ namespace CodeKatas.TicTacToe
 
         private ValidationResult CheckIfPositionAlreadyTaken(int position)
         {
-            if (!string.IsNullOrEmpty(Board[position]))
+            if (!string.IsNullOrEmpty(Board.Squares[position]))
             {
                 return new ValidationResult { IsValid = false, ValidationMessage = "Board position already filled" };
             }

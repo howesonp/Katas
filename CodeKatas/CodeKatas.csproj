@@ -54,7 +54,6 @@
     <Compile Include="TicTacToe\Game.cs" />
     <Compile Include="TicTacToe\Player.cs" />
     <Compile Include="TicTacToe\TicTacToe.cs" />
-    <Compile Include="TicTacToe\TicTacToeGameExtensions.cs" />
     <Compile Include="TicTacToe\ValidationResult.cs" />
     <Compile Include="TriangleKata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

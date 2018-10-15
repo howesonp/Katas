@@ -82,25 +82,16 @@ namespace CodeKatas.Tests.Unit
             actualValidationResult.Count(result => !result.IsValid).Should().Be(2);
         }
 
-        //public void ReturnWin_WhenPlaying_AndPositionOneTwoAndThreeAreFilledByX()
-        //{
-        //    var moves = new Dictionary<int, string>
-        //    {
-        //        {1, "X"},
-        //        {4, "O"},
-        //        {2, "X"},
-        //        {5, "O"},
-        //        {3, "X"},
+        [Test]
+        public void SetGameAsWon_WhenXGetThreeHorizontalInARow_WithValidMoves()
+        {
+            _ticTacToe.PlayerX.TryToTakeTurn(1);
+            _ticTacToe.PlayerO.TryToTakeTurn(4);
+            _ticTacToe.PlayerX.TryToTakeTurn(2);
+            _ticTacToe.PlayerO.TryToTakeTurn(5);
+            _ticTacToe.PlayerX.TryToTakeTurn(3);
 
-        //    };
-        //}
-
-        //private Game PlayWholeGame(Dictionary<int, string> moves, Game game)
-        //{
-        //    foreach (var move in moves)
-        //    {
-        //        TryTakeTurn(move.Key, move.Value);
-        //    }
-        //}
+            _ticTacToe.Game.HasWinner.Should().Be(true);
+        }
     }
 }

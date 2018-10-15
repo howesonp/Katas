@@ -21,7 +21,7 @@ namespace CodeKatas.TicTacToe
             if (validationResults.All(validationResult => validationResult.IsValid))
             {
                 MakeMove(position);
-                CheckForWin();
+
                 return validationResults;
             }
 
@@ -32,9 +32,14 @@ namespace CodeKatas.TicTacToe
         {
             _game.Board.Squares[position] = _playerSign;
             _game.PreviousTurn = _playerSign;
+            var win = CheckForWin();
+            if (win)
+            {
+                _game.IsFinished = true;
+            }
         }
 
-        public bool CheckForWin()
+        private bool CheckForWin()
         {
             _game.HasWinner = CheckHorizontalWinLines() ||
                               CheckVerticalLinesForWin() ||
@@ -45,7 +50,32 @@ namespace CodeKatas.TicTacToe
 
         private bool CheckHorizontalWinLines()
         {
-            return true;
+            var hasWin = false;
+
+            foreach (var boardWinningHorizontalLine in _game.Board.WinningHorizontalLines)
+            {
+                hasWin = CheckLineForWin(boardWinningHorizontalLine);
+
+                if (hasWin)
+                {
+                    return true;
+                }
+            }
+
+            return hasWin;
+
+        }
+
+        private bool CheckLineForWin(int boardWinningHorizontalLine)
+        {
+            if (_game.Board.Squares[boardWinningHorizontalLine] == _playerSign &&
+                _game.Board.Squares[boardWinningHorizontalLine + 1] == _playerSign &&
+                _game.Board.Squares[boardWinningHorizontalLine + 2] == _playerSign)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private bool CheckVerticalLinesForWin()

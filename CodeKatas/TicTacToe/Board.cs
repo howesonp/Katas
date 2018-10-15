@@ -6,12 +6,7 @@ namespace CodeKatas.TicTacToe
     {
         public Dictionary<int, string> Squares;
 
-        public int[,] WinningHorizontalLines = 
-        {
-            { 1, 2, 3 },
-            { 4, 5, 6 },
-            { 7, 8, 9 }
-        };
+        public int[] WinningHorizontalLines = { 1, 4, 7 };
 
         public Board()
         {

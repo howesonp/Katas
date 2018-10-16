@@ -10,6 +10,8 @@ namespace CodeKatas.TicTacToe
 
         public bool HasWinner { get; set; }
 
+        public string WinningPlayer { get; set; }
+
         public bool IsDraw { get; set; }
 
         public bool IsFirstMove { get; set; }
@@ -27,8 +29,7 @@ namespace CodeKatas.TicTacToe
             IsFirstMove = true;
             HasWinner = false;
         }
-
-  
+        
 
         public List<ValidationResult> CheckIfMoveValid(int position, string currentPlayer)
         {

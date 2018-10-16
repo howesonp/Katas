@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace CodeKatas.TicTacToe
 {
@@ -20,6 +21,8 @@ namespace CodeKatas.TicTacToe
 
         public string PreviousTurn = string.Empty;
 
+        public List<ValidationResult> MoveValidationResults { get; set; }
+
         public Game()
         {
             Board = new Board();
@@ -31,21 +34,19 @@ namespace CodeKatas.TicTacToe
         }
         
 
-        public List<ValidationResult> CheckIfMoveValid(int position, string currentPlayer)
+        public void CheckIfMoveValid(int position, string currentPlayer)
         {
-            var validationResults = new List<ValidationResult>();
+            MoveValidationResults = new List<ValidationResult>();
 
             if (IsFirstMove)
             {
-                validationResults.Add(CheckFirstTurnIsX(currentPlayer));
+                MoveValidationResults.Add(CheckFirstTurnIsX(currentPlayer));
                 IsFirstMove = false;
             }
 
-            validationResults.Add(CheckGameIsNotOver());
-            validationResults.Add(CheckIfPositionAlreadyTaken(position));
-            validationResults.Add(CheckCorrectPlayer(currentPlayer));
-
-            return validationResults; 
+            MoveValidationResults.Add(CheckGameIsNotOver());
+            MoveValidationResults.Add(CheckIfPositionAlreadyTaken(position));
+            MoveValidationResults.Add(CheckCorrectPlayer(currentPlayer));
         }
 
         private ValidationResult CheckGameIsNotOver()

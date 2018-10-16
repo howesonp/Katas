@@ -28,39 +28,39 @@ namespace CodeKatas.Tests.Unit
         [Test]
         public void PutAnXInPositionOne_WhenTakingFirstTurn_WithAnX()
         {
-            var actualValidationResult = _ticTacToe.PlayerX.TryToTakeTurn(1);
+            _ticTacToe.PlayerX.TryToTakeTurn(1);
             var expectedValidation = new ValidationResult {IsValid = true};
 
-            actualValidationResult.Should().AllBeEquivalentTo(expectedValidation);
+            _ticTacToe.Game.MoveValidationResults.Should().AllBeEquivalentTo(expectedValidation);
             _ticTacToe.Game.Board.Squares[1].Should().Be("X");
         }
 
         [Test]
         public void FailValidation_WhenTakingFirstTurn_WithAnO()
         {
-            var actualValidationResult = _ticTacToe.PlayerO.TryToTakeTurn(1);
+            _ticTacToe.PlayerO.TryToTakeTurn(1);
 
-            actualValidationResult.Select(result => result.ValidationMessage).Should().Contain("O is not permitted to take the first turn");
-            actualValidationResult.Count(result => !result.IsValid).Should().Be(1);
+            _ticTacToe.Game.MoveValidationResults.Select(result => result.ValidationMessage).Should().Contain("O is not permitted to take the first turn");
+            _ticTacToe.Game.MoveValidationResults.Count(result => !result.IsValid).Should().Be(1);
         }
 
         [Test]
         public void FailValidation_WhenTakingTurn_AndPositionHasAlreadyBeenTaken()
         {
             _ticTacToe.PlayerX.TryToTakeTurn(1);
-            var actualValidationResult = _ticTacToe.PlayerO.TryToTakeTurn(1);
+            _ticTacToe.PlayerO.TryToTakeTurn(1);
 
-            actualValidationResult.Select(result => result.ValidationMessage).Should().Contain("Board position already filled");
-            actualValidationResult.Count(result => !result.IsValid).Should().Be(1);
+            _ticTacToe.Game.MoveValidationResults.Select(result => result.ValidationMessage).Should().Contain("Board position already filled");
+            _ticTacToe.Game.MoveValidationResults.Count(result => !result.IsValid).Should().Be(1);
         }
 
         [Test]
         public void FailValidation_WhenTakingTurnWithAnX_AndPreviousTurnWasAlsoX()
         {
-             _ticTacToe.PlayerX.TryToTakeTurn(1);
-            var actualValidationResult = _ticTacToe.PlayerX.TryToTakeTurn(2);
-            actualValidationResult.Select(result => result.ValidationMessage).Should().Contain("X took the previous turn");
-            actualValidationResult.Count(result => !result.IsValid).Should().Be(1);
+            _ticTacToe.PlayerX.TryToTakeTurn(1);
+            _ticTacToe.PlayerX.TryToTakeTurn(2);
+            _ticTacToe.Game.MoveValidationResults.Select(result => result.ValidationMessage).Should().Contain("X took the previous turn");
+            _ticTacToe.Game.MoveValidationResults.Count(result => !result.IsValid).Should().Be(1);
         }
 
         [Test]
@@ -68,10 +68,10 @@ namespace CodeKatas.Tests.Unit
         {
             var moves = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             TakeAlternateTurns(moves);
-            var actualValidationResult = _ticTacToe.PlayerO.TryToTakeTurn(9);
+             _ticTacToe.PlayerO.TryToTakeTurn(9);
 
-            actualValidationResult.Select(result => result.ValidationMessage).Should().Contain("Game is over", "Board position is already filled");
-            actualValidationResult.Count(result => !result.IsValid).Should().Be(2);
+            _ticTacToe.Game.MoveValidationResults.Select(result => result.ValidationMessage).Should().Contain("Game is over", "Board position is already filled");
+            _ticTacToe.Game.MoveValidationResults.Count(result => !result.IsValid).Should().Be(2);
         }
 
         [Test]

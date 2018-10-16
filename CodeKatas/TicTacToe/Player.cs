@@ -10,43 +10,38 @@ namespace CodeKatas.TicTacToe
 
         public Player(string playerSign, Game game)
         {
-            this._playerSign = playerSign;
-            this._game = game;
+            _playerSign = playerSign;
+            _game = game;
         }
 
-        public List<ValidationResult> TryToTakeTurn(int position)
+        public void TryToTakeTurn(int position)
         {
-            var validationResults = _game.CheckIfMoveValid(position, _playerSign);
+            _game.CheckIfMoveValid(position, _playerSign);
 
-            if (validationResults.All(validationResult => validationResult.IsValid))
+            if (_game.MoveValidationResults.All(validationResult => validationResult.IsValid))
             {
                 MakeMove(position);
 
-                return validationResults;
-            }
+                if (!IsWinningMove()) return;
 
-            return validationResults;
+                _game.IsFinished = true;
+                _game.HasWinner = true;
+                _game.WinningPlayer = _playerSign;
+            }
         }
 
         private void MakeMove(int position)
         {
             _game.Board.Squares[position] = _playerSign;
+
             _game.PreviousTurn = _playerSign;
-            var win = CheckForWin();
-            if (win)
-            {
-                _game.IsFinished = true;
-            }
         }
 
-        private bool CheckForWin()
+        private bool IsWinningMove()
         {
-            _game.HasWinner = CheckHorizontalWinLines() ||
+            return CheckHorizontalWinLines() ||
                               CheckVerticalLinesForWin() ||
                               CheckDiagonalLinesForWin();
-
-            _game.WinningPlayer = _playerSign;
-            return _game.HasWinner;
         }
 
         private bool CheckHorizontalWinLines()

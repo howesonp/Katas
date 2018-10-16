@@ -118,6 +118,28 @@ namespace CodeKatas.Tests.Unit
             _ticTacToe.Game.WinningPlayer.Should().Be("X");
         }
 
+        [Test]
+        public void SetGameAsWon_WhenXGetThreeDiagonalInARow_WithValidMoves()
+        {
+            var moves = new[] { 1, 2, 5, 3, 9 };
+
+            TakeAlternateTurns(moves);
+
+            _ticTacToe.Game.HasWinner.Should().Be(true);
+            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+        }
+
+        [Test]
+        public void SetGameAsWon_WhenXGetThreeDiagonalInARow_WithValidMovesNonOrdered()
+        {
+            var moves = new[] { 5, 2, 3, 4, 7 };
+
+            TakeAlternateTurns(moves);
+
+            _ticTacToe.Game.HasWinner.Should().Be(true);
+            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+        }
+
         private void TakeAlternateTurns(int[] moves)
         {
             var isPlayerX = true;

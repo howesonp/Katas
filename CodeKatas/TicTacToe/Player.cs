@@ -22,11 +22,7 @@ namespace CodeKatas.TicTacToe
             {
                 MakeMove(position);
 
-                if (!IsWinningMove()) return;
-
-                _game.IsFinished = true;
-                _game.HasWinner = true;
-                _game.WinningPlayer = _playerSign;
+                CheckForWin();
             }
         }
 
@@ -37,54 +33,53 @@ namespace CodeKatas.TicTacToe
             _game.PreviousTurn = _playerSign;
         }
 
-        private bool IsWinningMove()
+        private void CheckForWin()
         {
-            return CheckHorizontalWinLines() ||
-                              CheckVerticalLinesForWin() ||
-                              CheckDiagonalLinesForWin();
+            var isWin = CheckHorizontalWinLines() ||
+                        CheckVerticalLinesForWin() ||
+                        CheckDiagonalLinesForWin();
+
+            if (isWin)
+            {
+                _game.IsFinished = true;
+                _game.HasWinner = true;
+                _game.WinningPlayer = _playerSign;
+            }
+        }
+
+        private bool CheckLineForWin(int startOfWinLine, int addition)
+        {
+            return _game.Board.Squares[startOfWinLine] == _playerSign &&
+                   _game.Board.Squares[startOfWinLine + addition] == _playerSign &&
+                   _game.Board.Squares[startOfWinLine + addition + addition] == _playerSign;
         }
 
         private bool CheckHorizontalWinLines()
         {
-            foreach (var boardWinningHorizontalLine in _game.Board.WinningHorizontalLines)
-            {
-                var hasWin = CheckLineForWin(boardWinningHorizontalLine, 1);
-
-                if (hasWin)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-
-        }
-
-        private bool CheckLineForWin(int boardWinningHorizontalLine, int addition)
-        {
-            return _game.Board.Squares[boardWinningHorizontalLine] == _playerSign &&
-                   _game.Board.Squares[boardWinningHorizontalLine + addition] == _playerSign &&
-                   _game.Board.Squares[boardWinningHorizontalLine + addition + addition] == _playerSign;
+            const int horizontalWinLineAddition = 1;
+            return CheckWinLines(_game.Board.WinningHorizontalLines, horizontalWinLineAddition);
         }
 
         private bool CheckVerticalLinesForWin()
         {
-            foreach (var boardWinningHorizontalLine in _game.Board.WinningVerticalLines)
-            {
-                var hasWin = CheckLineForWin(boardWinningHorizontalLine, 3);
-
-                if (hasWin)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            const int verticalWinLineAddition = 3;
+            return CheckWinLines(_game.Board.WinningVerticalLines, verticalWinLineAddition);
         }
 
         private bool CheckDiagonalLinesForWin()
         {
-            return false;
+            const int firstDiagonalLineAddition = 4;
+            const int secondDiagonalLineAddition = 2;
+
+            var firstDiagonalHasWin =  CheckWinLines(_game.Board.WinningDiagonalLineOne, firstDiagonalLineAddition);
+            var secondDiagonalHasWin =  CheckWinLines(_game.Board.WinningDiagonalLineTwo, secondDiagonalLineAddition);
+
+            return firstDiagonalHasWin || secondDiagonalHasWin;
+        }
+
+        private bool CheckWinLines(int[] winLines, int addition)
+        {
+            return winLines.Select(winLine => CheckLineForWin(winLine, addition)).Any(hasWin => hasWin);
         }
     }
 }

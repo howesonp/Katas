@@ -8,7 +8,8 @@ namespace CodeKatas.TicTacToe
 
         public int[] WinningHorizontalLines = { 1, 4, 7 };
         public int[] WinningVerticalLines = { 1, 2, 3 };
-        public int[] WinningDiagonalLines = { 1, 3 };
+        public int[] WinningDiagonalLineOne = { 1 };
+        public int[] WinningDiagonalLineTwo = { 3 };
 
         public Board()
         {

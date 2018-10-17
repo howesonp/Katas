@@ -70,8 +70,16 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
              _ticTacToe.PlayerO.TryToTakeTurn(9);
 
-            _ticTacToe.Game.MoveValidationResults.Select(result => result.ValidationMessage).Should().Contain("Game is over", "Board position is already filled");
-            _ticTacToe.Game.MoveValidationResults.Count(result => !result.IsValid).Should().Be(2);
+            _ticTacToe.Game.MoveValidationResults.Select(result => result.ValidationMessage).Should().Contain("Game is over");
+            _ticTacToe.Game.MoveValidationResults.Count(result => !result.IsValid).Should().Be(1);
+        }
+
+        [Test]
+        public void BeADraw_IfAllPositionsAreTaken_AndThereIsNoWinner()
+        {
+            var moves = new[] { 1, 2, 3, 5, 4, 7, 6, 9, 8 };
+            TakeAlternateTurns(moves);
+            _ticTacToe.Game.IsDraw.Should().Be(true);
         }
 
         [Test]

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace CodeKatas.TicTacToe
 {
     public class Game
     {
-        public bool IsFinished { get; set; }
-
         public bool HasWinner { get; set; }
 
         public string WinningPlayer { get; set; }
@@ -26,14 +22,11 @@ namespace CodeKatas.TicTacToe
         public Game()
         {
             Board = new Board();
-            
-            IsFinished = false;
             IsDraw = false;
             IsFirstMove = true;
             HasWinner = false;
         }
         
-
         public void CheckIfMoveValid(int position, string currentPlayer)
         {
             MoveValidationResults = new List<ValidationResult>();
@@ -51,43 +44,30 @@ namespace CodeKatas.TicTacToe
 
         private ValidationResult CheckGameIsNotOver()
         {
-            if (Board.Squares.All(e => e.Value != string.Empty))
-            {
-                IsFinished = true;
-                return new ValidationResult { IsValid = false, ValidationMessage = "Game is over" };
-            }
-
-            return new ValidationResult { IsValid = true };
+            return HasWinner || IsDraw
+                ? new ValidationResult { IsValid = false, ValidationMessage = "Game is over" } 
+                : new ValidationResult {IsValid = true}; 
         }
 
         private ValidationResult CheckFirstTurnIsX(string currentPlayer)
         {
-            if (IsFirstMove && currentPlayer == "O")
-            {
-                return new ValidationResult { IsValid = false, ValidationMessage = "O is not permitted to take the first turn" };
-            }
-
-            return new ValidationResult { IsValid = true };
+            return IsFirstMove && currentPlayer == "O"
+                ? new ValidationResult {IsValid = false, ValidationMessage = "O is not permitted to take the first turn"}
+                : new ValidationResult {IsValid = true};
         }
 
         private ValidationResult CheckIfPositionAlreadyTaken(int position)
         {
-            if (!string.IsNullOrEmpty(Board.Squares[position]))
-            {
-                return new ValidationResult { IsValid = false, ValidationMessage = "Board position already filled" };
-            }
-
-            return new ValidationResult { IsValid = true };
+            return !string.IsNullOrEmpty(Board.Squares[position])
+                ? new ValidationResult { IsValid = false, ValidationMessage = "Board position already filled" }
+                : new ValidationResult {IsValid = true};
         }
 
         private ValidationResult CheckCorrectPlayer(string currentPlayer)
         {
-            if (PreviousTurn == currentPlayer)
-            {
-                return new ValidationResult { IsValid = false, ValidationMessage = $"{currentPlayer} took the previous turn" };
-            }
-
-            return new ValidationResult { IsValid = true };
+            return PreviousTurn == currentPlayer 
+                ? new ValidationResult { IsValid = false, ValidationMessage = $"{currentPlayer} took the previous turn" } 
+                : new ValidationResult { IsValid = true };
         }
     }
 }

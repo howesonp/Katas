@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace CodeKatas.TicTacToe
 {
@@ -21,15 +20,14 @@ namespace CodeKatas.TicTacToe
             if (_game.MoveValidationResults.All(validationResult => validationResult.IsValid))
             {
                 MakeMove(position);
-
                 CheckForWin();
+                CheckForDraw();
             }
         }
 
         private void MakeMove(int position)
         {
             _game.Board.Squares[position] = _playerSign;
-
             _game.PreviousTurn = _playerSign;
         }
 
@@ -41,10 +39,15 @@ namespace CodeKatas.TicTacToe
 
             if (isWin)
             {
-                _game.IsFinished = true;
                 _game.HasWinner = true;
                 _game.WinningPlayer = _playerSign;
             }
+        }
+
+        private void CheckForDraw()
+        {
+            _game.IsDraw = _game.Board.Squares.All(square => !string.IsNullOrEmpty(square.Value))
+                           && !_game.HasWinner;
         }
 
         private bool CheckLineForWin(int startOfWinLine, int addition)

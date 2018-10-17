@@ -52,6 +52,7 @@
     <Compile Include="StringCalculator.cs" />
     <Compile Include="TicTacToe\Board.cs" />
     <Compile Include="TicTacToe\Game.cs" />
+    <Compile Include="TicTacToe\Move.cs" />
     <Compile Include="TicTacToe\Player.cs" />
     <Compile Include="TicTacToe\TicTacToe.cs" />
     <Compile Include="TicTacToe\ValidationResult.cs" />

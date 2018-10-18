@@ -8,6 +8,8 @@ namespace CodeKatas.Tests.Unit
     [TestFixture]
     public class TicTacToeShould
     {
+        protected internal const string Cross = "X";
+        protected internal const string Nought = "O";
         private TicTacToe.TicTacToe _ticTacToe;
 
         [SetUp]
@@ -32,7 +34,7 @@ namespace CodeKatas.Tests.Unit
             var expectedValidation = new ValidationResult {IsValid = true};
 
             _ticTacToe.Game.MoveValidationResults.Should().AllBeEquivalentTo(expectedValidation);
-            _ticTacToe.Game.Board.Squares[1].Should().Be("X");
+            _ticTacToe.Game.Board.Squares[1].Should().Be(Cross);
         }
 
         [Test]
@@ -90,7 +92,7 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
 
             _ticTacToe.Game.HasWinner.Should().Be(true);
-            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+            _ticTacToe.Game.WinningPlayer.Should().Be(Cross);
         }
 
         [Test]
@@ -101,7 +103,7 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
 
             _ticTacToe.Game.HasWinner.Should().Be(true);
-            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+            _ticTacToe.Game.WinningPlayer.Should().Be(Cross);
         }
 
         [Test]
@@ -112,7 +114,7 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
 
             _ticTacToe.Game.HasWinner.Should().Be(true);
-            _ticTacToe.Game.WinningPlayer.Should().Be("O");
+            _ticTacToe.Game.WinningPlayer.Should().Be(Nought);
         }
 
         [Test]
@@ -123,7 +125,7 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
 
             _ticTacToe.Game.HasWinner.Should().Be(true);
-            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+            _ticTacToe.Game.WinningPlayer.Should().Be(Cross);
         }
 
         [Test]
@@ -134,7 +136,7 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
 
             _ticTacToe.Game.HasWinner.Should().Be(true);
-            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+            _ticTacToe.Game.WinningPlayer.Should().Be(Cross);
         }
 
         [Test]
@@ -145,8 +147,38 @@ namespace CodeKatas.Tests.Unit
             TakeAlternateTurns(moves);
 
             _ticTacToe.Game.HasWinner.Should().Be(true);
-            _ticTacToe.Game.WinningPlayer.Should().Be("X");
+            _ticTacToe.Game.WinningPlayer.Should().Be(Cross);
         }
+
+        [Test]
+        public void SetGameAsWon_WhenOGetThreeDiagonalInARow_WithValidMovesNonOrdered()
+        {
+            var moves = new[] { 6, 1, 8, 9, 7, 5 };
+
+            TakeAlternateTurns(moves);
+
+            _ticTacToe.Game.HasWinner.Should().Be(true);
+            _ticTacToe.Game.WinningPlayer.Should().Be(Nought);
+        }
+
+        [Test]
+        public void ReturnValidationError_WhenGameIsWon_AndPlayerTriesToTakeAnotherTurn()
+        {
+            var moves = new[] { 6, 1, 8, 9, 7, 5 };
+
+            TakeAlternateTurns(moves);
+
+            _ticTacToe.Game.HasWinner.Should().Be(true);
+            _ticTacToe.Game.WinningPlayer.Should().Be(Nought);
+            _ticTacToe.Game.MoveValidationResults.Count(e => !e.IsValid).Should().Be(0);
+
+            _ticTacToe.PlayerX.TryToTakeTurn(2);
+            _ticTacToe.Game.MoveValidationResults.Count(e => !e.IsValid).Should().Be(1);
+        }
+
+        //1 2 3 
+        //4 5 6 
+        //7 8 9
 
         private void TakeAlternateTurns(int[] moves)
         {

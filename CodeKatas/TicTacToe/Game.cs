@@ -12,7 +12,7 @@ namespace CodeKatas.TicTacToe
         public bool IsDraw { get; set; }
 
         public bool IsFirstMove { get; set; }
-    
+
         public Board Board { get; }
 
         public string PreviousTurn = string.Empty;
@@ -26,48 +26,74 @@ namespace CodeKatas.TicTacToe
             IsFirstMove = true;
             HasWinner = false;
         }
-        
+
         public void CheckIfMoveValid(int position, string currentPlayer)
         {
             MoveValidationResults = new List<ValidationResult>();
 
             if (IsFirstMove)
             {
-                MoveValidationResults.Add(CheckFirstTurnIsX(currentPlayer));
+                MoveValidationResults.Add(this.CheckFirstTurnIsX(currentPlayer));
                 IsFirstMove = false;
             }
 
-            MoveValidationResults.Add(CheckGameIsNotOver());
-            MoveValidationResults.Add(CheckIfPositionAlreadyTaken(position));
-            MoveValidationResults.Add(CheckCorrectPlayer(currentPlayer));
+            MoveValidationResults.Add(this.CheckGameIsNotOver());
+            MoveValidationResults.Add(this.CheckIfPositionAlreadyTaken(position));
+            MoveValidationResults.Add(this.CheckCorrectPlayer(currentPlayer));
         }
 
-        private ValidationResult CheckGameIsNotOver()
+        public void CheckForDraw()
         {
-            return HasWinner || IsDraw
-                ? new ValidationResult { IsValid = false, ValidationMessage = "Game is over" } 
-                : new ValidationResult {IsValid = true}; 
+            IsDraw = Board.Squares.All(square => !string.IsNullOrEmpty(square.Value))
+                     && !HasWinner;
         }
 
-        private ValidationResult CheckFirstTurnIsX(string currentPlayer)
+        public void CheckForWin()
         {
-            return IsFirstMove && currentPlayer == "O"
-                ? new ValidationResult {IsValid = false, ValidationMessage = "O is not permitted to take the first turn"}
-                : new ValidationResult {IsValid = true};
+            var isWin = CheckHorizontalWinLines() ||
+                        CheckVerticalLinesForWin() ||
+                        CheckDiagonalLinesForWin();
+
+            if (isWin)
+            {
+                HasWinner = true;
+                WinningPlayer = PreviousTurn;
+            }
         }
 
-        private ValidationResult CheckIfPositionAlreadyTaken(int position)
+        private bool CheckHorizontalWinLines()
         {
-            return !string.IsNullOrEmpty(Board.Squares[position])
-                ? new ValidationResult { IsValid = false, ValidationMessage = "Board position already filled" }
-                : new ValidationResult {IsValid = true};
+            const int horizontalWinLineAddition = 1;
+            return CheckWinLines(Board.WinningHorizontalLines, horizontalWinLineAddition);
         }
 
-        private ValidationResult CheckCorrectPlayer(string currentPlayer)
+        private bool CheckVerticalLinesForWin()
         {
-            return PreviousTurn == currentPlayer 
-                ? new ValidationResult { IsValid = false, ValidationMessage = $"{currentPlayer} took the previous turn" } 
-                : new ValidationResult { IsValid = true };
+            const int verticalWinLineAddition = 3;
+            return CheckWinLines(Board.WinningVerticalLines, verticalWinLineAddition);
+        }
+
+        private bool CheckDiagonalLinesForWin()
+        {
+            const int firstDiagonalLineAddition = 4;
+            const int secondDiagonalLineAddition = 2;
+
+            var firstDiagonalHasWin = CheckWinLines(Board.WinningDiagonalLineOne, firstDiagonalLineAddition);
+            var secondDiagonalHasWin = CheckWinLines(Board.WinningDiagonalLineTwo, secondDiagonalLineAddition);
+
+            return firstDiagonalHasWin || secondDiagonalHasWin;
+        }
+
+        private bool CheckWinLines(int[] winLines, int addition)
+        {
+            return winLines.Select(winLine => CheckLineForWin(winLine, addition)).Any(hasWin => hasWin);
+        }
+
+        private bool CheckLineForWin(int startOfWinLine, int addition)
+        {
+            return Board.Squares[startOfWinLine] == PreviousTurn &&
+                   Board.Squares[startOfWinLine + addition] == PreviousTurn &&
+                   Board.Squares[startOfWinLine + addition + addition] == PreviousTurn;
         }
     }
 }

@@ -1,51 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeKatas.TicTacToe
 {
     public class Game
     {
-        public bool HasWinner { get; set; }
-
-        public string WinningPlayer { get; set; }
-
-        public bool IsDraw { get; set; }
-
-        public bool IsFirstMove { get; set; }
-
-        public Board Board { get; }
-
-        public string PreviousTurn = string.Empty;
-
-        public List<ValidationResult> MoveValidationResults { get; set; }
+        public Board Board;
+        public GameState CurrentState;
+        public PlayerSign PreviousTurn;
 
         public Game()
         {
+            InitialiseGameState();
             Board = new Board();
-            IsDraw = false;
-            IsFirstMove = true;
-            HasWinner = false;
         }
 
-        public void CheckIfMoveValid(int position, string currentPlayer)
+        private void InitialiseGameState()
         {
-            MoveValidationResults = new List<ValidationResult>();
+            CurrentState = GameState.InProgress;
+        }
 
-            if (IsFirstMove)
+        public void CheckIfMoveValid(BoardPosition position, PlayerSign currentPlayer)
+        {
+            if (Board.Squares.AreAllSquaresEmpty() && currentPlayer == PlayerSign.Nought)
             {
-                MoveValidationResults.Add(this.CheckFirstTurnIsX(currentPlayer));
-                IsFirstMove = false;
+                throw new Exception("O cannot go first");
             }
 
-            MoveValidationResults.Add(this.CheckGameIsNotOver());
-            MoveValidationResults.Add(this.CheckIfPositionAlreadyTaken(position));
-            MoveValidationResults.Add(this.CheckCorrectPlayer(currentPlayer));
+            if (CurrentState == GameState.IsDraw || CurrentState == GameState.PlayerXWin || CurrentState == GameState.PlayerOWin)
+            { 
+                throw new Exception("Game over");
+            }
+
+            if (Board.Squares.IsSquareFilled(position))
+            {
+                throw new Exception("Position already filled");
+            }
+
+            if (currentPlayer == PreviousTurn)
+            {
+                throw new Exception($"{currentPlayer} took the previous turn");
+            }
         }
 
         public void CheckForDraw()
         {
-            IsDraw = Board.Squares.All(square => !string.IsNullOrEmpty(square.Value))
-                     && !HasWinner;
+            var squaresFilled = Board.Squares.AreAllSquaresFilled();
+
+            if (squaresFilled)
+            {
+                CurrentState = GameState.IsDraw;
+
+            }
         }
 
         public void CheckForWin()
@@ -56,8 +63,7 @@ namespace CodeKatas.TicTacToe
 
             if (isWin)
             {
-                HasWinner = true;
-                WinningPlayer = PreviousTurn;
+                CurrentState =  PreviousTurn == PlayerSign.Nought ? GameState.PlayerOWin : GameState.PlayerXWin;
             }
         }
 
@@ -84,16 +90,17 @@ namespace CodeKatas.TicTacToe
             return firstDiagonalHasWin || secondDiagonalHasWin;
         }
 
-        private bool CheckWinLines(int[] winLines, int addition)
+        private bool CheckWinLines(IEnumerable<BoardPosition> winLines, int addition)
         {
-            return winLines.Select(winLine => CheckLineForWin(winLine, addition)).Any(hasWin => hasWin);
+            return winLines.Select(winLine => CheckLineForWin(winLine, addition))
+                           .Any(hasWin => hasWin);
         }
 
-        private bool CheckLineForWin(int startOfWinLine, int addition)
+        private bool CheckLineForWin(BoardPosition startOfWinLine, int addition)
         {
-            return Board.Squares[startOfWinLine] == PreviousTurn &&
-                   Board.Squares[startOfWinLine + addition] == PreviousTurn &&
-                   Board.Squares[startOfWinLine + addition + addition] == PreviousTurn;
+            return Board.Squares.GetPlayerSignOnBoardPosition(startOfWinLine) == PreviousTurn &&
+                   Board.Squares.GetPlayerSignOnBoardPosition(startOfWinLine + addition) == PreviousTurn &&
+                   Board.Squares.GetPlayerSignOnBoardPosition(startOfWinLine + addition + addition) == PreviousTurn;
         }
     }
 }

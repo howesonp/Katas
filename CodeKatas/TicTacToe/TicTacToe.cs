@@ -13,8 +13,8 @@ namespace CodeKatas.TicTacToe
         public TicTacToe()
         {
             Game = new Game();
-            PlayerX = new Player("X", Game);
-            PlayerO = new Player("O", Game);
+            PlayerX = new Player(PlayerSign.Cross, Game);
+            PlayerO = new Player(PlayerSign.Nought, Game);
         }
     }
 }

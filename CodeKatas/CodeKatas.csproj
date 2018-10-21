@@ -51,9 +51,14 @@
     <Compile Include="FizzBuzzGame.cs" />
     <Compile Include="StringCalculator.cs" />
     <Compile Include="TicTacToe\Board.cs" />
+    <Compile Include="TicTacToe\BoardPosition.cs" />
     <Compile Include="TicTacToe\Game.cs" />
-    <Compile Include="TicTacToe\GameExtensions.cs" />
+    <Compile Include="TicTacToe\GameState.cs" />
     <Compile Include="TicTacToe\Player.cs" />
+    <Compile Include="TicTacToe\PlayerSign.cs" />
+    <Compile Include="TicTacToe\Square.cs" />
+    <Compile Include="TicTacToe\SquareCollection.cs" />
+    <Compile Include="TicTacToe\SquareExtensions.cs" />
     <Compile Include="TicTacToe\TicTacToe.cs" />
     <Compile Include="TicTacToe\ValidationResult.cs" />
     <Compile Include="TriangleKata.cs" />

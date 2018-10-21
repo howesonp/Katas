@@ -58,9 +58,7 @@
     <Compile Include="TicTacToe\PlayerSign.cs" />
     <Compile Include="TicTacToe\Square.cs" />
     <Compile Include="TicTacToe\SquareCollection.cs" />
-    <Compile Include="TicTacToe\SquareExtensions.cs" />
     <Compile Include="TicTacToe\TicTacToe.cs" />
-    <Compile Include="TicTacToe\ValidationResult.cs" />
     <Compile Include="TriangleKata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

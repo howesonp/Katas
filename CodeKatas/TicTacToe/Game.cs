@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CodeKatas.TicTacToe
 {
@@ -23,7 +21,7 @@ namespace CodeKatas.TicTacToe
 
         public void CheckIfMoveValid(BoardPosition position, PlayerSign currentPlayer)
         {
-            if (Board.Squares.AreAllSquaresEmpty() && currentPlayer == PlayerSign.Nought)
+            if (Board.AreAllSquaresEmpty() && currentPlayer == PlayerSign.Nought)
             {
                 throw new Exception("O cannot go first");
             }
@@ -33,7 +31,7 @@ namespace CodeKatas.TicTacToe
                 throw new Exception("Game over");
             }
 
-            if (Board.Squares.IsSquareFilled(position))
+            if (Board.IsSquareFilled(position))
             {
                 throw new Exception("Position already filled");
             }
@@ -44,63 +42,26 @@ namespace CodeKatas.TicTacToe
             }
         }
 
-        public void CheckForDraw()
+        public GameState CheckForResult(PlayerSign playerSign)
         {
-            var squaresFilled = Board.Squares.AreAllSquaresFilled();
+            var result = IsWin(playerSign);
 
-            if (squaresFilled)
+            if (result)
             {
-                CurrentState = GameState.IsDraw;
-
+                return PreviousTurn == PlayerSign.Cross ? CurrentState = GameState.PlayerXWin : CurrentState = GameState.PlayerOWin;
             }
+
+            return IsADraw() ? CurrentState = GameState.IsDraw : CurrentState = GameState.InProgress;
         }
 
-        public void CheckForWin()
+        public bool IsADraw()
         {
-            var isWin = CheckHorizontalWinLines() ||
-                        CheckVerticalLinesForWin() ||
-                        CheckDiagonalLinesForWin();
-
-            if (isWin)
-            {
-                CurrentState =  PreviousTurn == PlayerSign.Nought ? GameState.PlayerOWin : GameState.PlayerXWin;
-            }
+            return Board.AreAllSquaresTaken();
         }
 
-        private bool CheckHorizontalWinLines()
+        public bool IsWin(PlayerSign playerSign)
         {
-            const int horizontalWinLineAddition = 1;
-            return CheckWinLines(Board.WinningHorizontalLines, horizontalWinLineAddition);
-        }
-
-        private bool CheckVerticalLinesForWin()
-        {
-            const int verticalWinLineAddition = 3;
-            return CheckWinLines(Board.WinningVerticalLines, verticalWinLineAddition);
-        }
-
-        private bool CheckDiagonalLinesForWin()
-        {
-            const int firstDiagonalLineAddition = 4;
-            const int secondDiagonalLineAddition = 2;
-
-            var firstDiagonalHasWin = CheckWinLines(Board.WinningDiagonalLineOne, firstDiagonalLineAddition);
-            var secondDiagonalHasWin = CheckWinLines(Board.WinningDiagonalLineTwo, secondDiagonalLineAddition);
-
-            return firstDiagonalHasWin || secondDiagonalHasWin;
-        }
-
-        private bool CheckWinLines(IEnumerable<BoardPosition> winLines, int addition)
-        {
-            return winLines.Select(winLine => CheckLineForWin(winLine, addition))
-                           .Any(hasWin => hasWin);
-        }
-
-        private bool CheckLineForWin(BoardPosition startOfWinLine, int addition)
-        {
-            return Board.Squares.GetPlayerSignOnBoardPosition(startOfWinLine) == PreviousTurn &&
-                   Board.Squares.GetPlayerSignOnBoardPosition(startOfWinLine + addition) == PreviousTurn &&
-                   Board.Squares.GetPlayerSignOnBoardPosition(startOfWinLine + addition + addition) == PreviousTurn;
+            return Board.CheckWinLines(playerSign);
         }
     }
 }

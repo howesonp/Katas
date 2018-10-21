@@ -30,21 +30,20 @@ namespace CodeKatas.TicTacToe
         public void UpdateSquare(BoardPosition move, PlayerSign playerSign)
         {
             var currentSquare = _squares.First(square => square.Position == move);
-
             currentSquare.PlayerSign = playerSign;
         }
 
-        public bool AreAllSquaresEmpty()
+        public bool AreAllEmpty()
         {
             return _squares.All(square => square.PlayerSign == PlayerSign.Empty);
         }
 
-        public bool AreAllSquaresFilled()
+        public bool AreAllTaken()
         {
             return _squares.All(square => square.PlayerSign != PlayerSign.Empty);
         }
 
-        public bool IsSquareFilled(BoardPosition position)
+        public bool IsSquareTaken(BoardPosition position)
         {
             return _squares.Any(e => e.Position == position && e.PlayerSign != PlayerSign.Empty);
         }
@@ -52,7 +51,6 @@ namespace CodeKatas.TicTacToe
         public PlayerSign GetPlayerSignOnBoardPosition(BoardPosition position)
         {
             var square = _squares.First(e => e.Position == position);
-
             return square.PlayerSign;
         }
     }

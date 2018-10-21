@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace CodeKatas.TicTacToe
+﻿namespace CodeKatas.TicTacToe
 {
     public class Player
     {
@@ -13,19 +11,14 @@ namespace CodeKatas.TicTacToe
             _game = game;
         }
 
-        public void TryToTakeTurn(BoardPosition position)
+        public GameState TryToTakeTurn(BoardPosition position)
         {
             _game.CheckIfMoveValid(position, _playerSign);
 
-            MakeMove(position);
-            _game.CheckForWin();
-            _game.CheckForDraw();
-        }
-
-        private void MakeMove(BoardPosition position)
-        {
             _game.Board.UpdateSquare(_playerSign, position);
             _game.PreviousTurn = _playerSign;
+
+            return _game.CheckForResult(_playerSign);
         }
     }
 }

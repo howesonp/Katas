@@ -16,7 +16,7 @@
             _game.CheckIfMoveValid(position, _playerSign);
 
             _game.Board.UpdateSquare(_playerSign, position);
-            _game.PreviousTurn = _playerSign;
+            _game.PreviousPlayer = _playerSign;
 
             return _game.CheckForResult(_playerSign);
         }

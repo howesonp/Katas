@@ -6,7 +6,7 @@ namespace CodeKatas.TicTacToe
     {
         public Board Board;
         public GameState CurrentState;
-        public PlayerSign PreviousTurn;
+        public PlayerSign PreviousPlayer;
 
         public Game()
         {
@@ -21,25 +21,10 @@ namespace CodeKatas.TicTacToe
 
         public void CheckIfMoveValid(BoardPosition position, PlayerSign currentPlayer)
         {
-            if (Board.AreAllSquaresEmpty() && currentPlayer == PlayerSign.Nought)
-            {
-                throw new Exception("O cannot go first");
-            }
-
-            if (CurrentState == GameState.IsDraw || CurrentState == GameState.PlayerXWin || CurrentState == GameState.PlayerOWin)
-            { 
-                throw new Exception("Game over");
-            }
-
-            if (Board.IsSquareFilled(position))
-            {
-                throw new Exception("Position already filled");
-            }
-
-            if (currentPlayer == PreviousTurn)
-            {
-                throw new Exception($"{currentPlayer} took the previous turn");
-            }
+            Board.CheckFirstPlayerIsNotNought(currentPlayer);
+            CurrentState.IsGameOver();
+            Board.PositionAlreadyTaken(position);
+            currentPlayer.ValidateCorrectPlayer(PreviousPlayer);
         }
 
         public GameState CheckForResult(PlayerSign playerSign)
@@ -48,7 +33,7 @@ namespace CodeKatas.TicTacToe
 
             if (result)
             {
-                return PreviousTurn == PlayerSign.Cross ? CurrentState = GameState.PlayerXWin : CurrentState = GameState.PlayerOWin;
+                return PreviousPlayer == PlayerSign.Cross ? CurrentState = GameState.PlayerXWin : CurrentState = GameState.PlayerOWin;
             }
 
             return IsADraw() ? CurrentState = GameState.IsDraw : CurrentState = GameState.InProgress;

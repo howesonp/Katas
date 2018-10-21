@@ -4,14 +4,9 @@ namespace CodeKatas.TicTacToe
 {
     public class SquareCollection 
     {
-        private Square[] _squares;
+        private readonly Square[] _squares;
 
         public SquareCollection()
-        {
-            CreateSquares();
-        }
-
-        private void CreateSquares()
         {
             _squares = new[]
             {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CodeKatas.TicTacToe
+﻿namespace CodeKatas.TicTacToe
 {
     public class Game
     {
@@ -19,19 +17,22 @@ namespace CodeKatas.TicTacToe
             CurrentState = GameState.InProgress;
         }
 
-        public void CheckIfMoveValid(BoardPosition position, PlayerSign currentPlayer)
+        public void MakeMove(BoardPosition position, PlayerSign currentPlayer)
         {
             Board.CheckFirstPlayerIsNotNought(currentPlayer);
             CurrentState.IsGameOver();
             Board.PositionAlreadyTaken(position);
             currentPlayer.ValidateCorrectPlayer(PreviousPlayer);
+            Board.UpdateSquare(currentPlayer, position);
+
+            PreviousPlayer = currentPlayer;
         }
 
         public GameState CheckForResult(PlayerSign playerSign)
         {
-            var result = IsWin(playerSign);
+            var isWin = IsWin(playerSign);
 
-            if (result)
+            if (isWin)
             {
                 return PreviousPlayer == PlayerSign.Cross ? CurrentState = GameState.PlayerXWin : CurrentState = GameState.PlayerOWin;
             }

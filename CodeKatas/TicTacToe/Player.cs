@@ -11,14 +11,10 @@
             _game = game;
         }
 
-        public GameState TryToTakeTurn(BoardPosition position)
+        public void TryToTakeTurn(BoardPosition position)
         {
-            _game.CheckIfMoveValid(position, _playerSign);
-
-            _game.Board.UpdateSquare(_playerSign, position);
-            _game.PreviousPlayer = _playerSign;
-
-            return _game.CheckForResult(_playerSign);
+            _game.MakeMove(position, _playerSign);
+            _game.CheckForResult(_playerSign);
         }
     }
 }

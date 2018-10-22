@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeKatas.TicTacToe
 {
-    public class Board
+    internal class Board
     {
         private List<Move> _moves;
         private const int MaximumMoveCount = 9;
@@ -14,29 +15,11 @@ namespace CodeKatas.TicTacToe
             _moves = new List<Move>();
         }
 
-        public void AddMoveToBoard(BoardPosition position, PlayerSign playerSign)
+        public void AddMoveToBoard(Move move)
         {
-            var move = new Move(position, playerSign);
-
-            ValidateMove(playerSign, move);
-
+            ValidateMove(move);
             _moves.Add(move);
-
-            lastPlayed = playerSign;
-        }
-
-        private void ValidateMove(PlayerSign playerSign, Move move)
-        {
-            _moves.CheckFirstPlayerCorrect(playerSign);
-            _moves.CheckIfAllMovesTaken(MaximumMoveCount);
-            _moves.CheckIfPositionTaken(move);
-
-            move.CheckCorrectPlayer(lastPlayed);
-        }
-
-        public bool AreAllMovesTaken()
-        {
-            return _moves.Count() == MaximumMoveCount;
+            lastPlayed = move.PlayerSign;
         }
 
         public PlayerSign GetPlayerSignOnBoardPosition(BoardPosition position)
@@ -44,6 +27,74 @@ namespace CodeKatas.TicTacToe
             var move = _moves.FirstOrDefault(e => e.Position == position);
 
             return move == null ? PlayerSign.Empty : move.PlayerSign;
+        }
+
+        public GameState CheckForResult()
+        {
+            var isWin = CheckWinLines();
+
+            if (isWin)
+            {
+                return lastPlayed == PlayerSign.Cross ? GameState.PlayerXWin : GameState.PlayerOWin;
+            }
+
+            return AreAllMovesTaken() ? GameState.IsDraw : GameState.InProgress;
+        }
+
+        private void ValidateMove(Move move)
+        {
+            CheckFirstPlayerCorrect(move.PlayerSign);
+            CheckIfAllMovesTaken(MaximumMoveCount);
+            CheckIfPositionTaken(move);
+            CheckCorrectPlayer(move);
+        }
+
+        private void CheckFirstPlayerCorrect(PlayerSign playerSign)
+        {
+            if (_moves.Count == 0 && playerSign == PlayerSign.Nought)
+            {
+                throw new Exception("Nought cannot take the first move");
+            }
+        }
+
+        private void CheckIfPositionTaken(Move thisMove)
+        {
+            if (_moves.Any(move => move.Equals(thisMove)))
+            {
+                throw new Exception("This position has already been taken");
+            }
+        }
+
+        private void CheckIfAllMovesTaken(int MaximumMoveCount)
+        {
+            if (_moves.Count() == MaximumMoveCount)
+            {
+                throw new Exception("No more positions available on the board");
+            }
+        }
+
+        private void CheckCorrectPlayer(Move move)
+        {
+            if (move.PlayerSign == lastPlayed)
+            {
+                throw new Exception($"{move.PlayerSign} took the previous turn");
+            }
+        }
+
+        private bool AreAllMovesTaken()
+        {
+            return _moves.Count() == MaximumMoveCount;
+        }
+
+        private bool CheckWinLines()
+        {
+            var winningOptions = new GameWinOptions();
+
+            return winningOptions.Lines.Select(winLine =>
+                            GetPlayerSignOnBoardPosition(winLine[0]) == lastPlayed &&
+                            GetPlayerSignOnBoardPosition(winLine[1]) == lastPlayed &&
+                            GetPlayerSignOnBoardPosition(winLine[2]) == lastPlayed)
+                    .Any(hasWin => hasWin);
         }
     }
 }

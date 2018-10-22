@@ -3,13 +3,14 @@ using System.Linq;
 using NUnit.Framework;
 using CodeKatas.TicTacToe;
 using FluentAssertions;
+using System.Collections.Generic;
 
 namespace CodeKatas.Tests.Unit
 {
     [TestFixture]
     public class TicTacToeShould
     {
-        private TicTacToe.TicTacToeGame _ticTacToe;
+        private TicTacToeGame _ticTacToe;
 
         [SetUp]
         public void SetUp()
@@ -19,257 +20,238 @@ namespace CodeKatas.Tests.Unit
         }
 
         [Test]
-        public void PutAnXInPositionOne_WhenTakingFirstTurn_WithAnX()
+        public void ReturnGameInProgress_WhenTakingFirstTurn_WithAnX()
         {
-            _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Cross);
-            
-            _ticTacToe.Board.GetPlayerSignOnBoardPosition(BoardPosition.TopLeft).Should().Be(PlayerSign.Cross);
+            var crossMove = new Move(BoardPosition.TopLeft, PlayerSign.Cross);
+
+            var gameState = _ticTacToe.TryToTakeTurn(crossMove);
+
+            gameState.Should().Be(GameState.InProgress);
         }
 
         [Test]
         public void ThrowException_WhenTakingFirstTurn_WithAnO()
         {
-            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Nought);
+            var noughtMove = new Move(BoardPosition.TopLeft, PlayerSign.Nought);
 
-            move.Should().Throw<Exception>().WithMessage("Nought cannot take the first move");
+            Action moveAction = () => _ticTacToe.TryToTakeTurn(noughtMove);
+
+            moveAction.Should().Throw<Exception>().WithMessage("Nought cannot take the first move");
         }
 
         [Test]
         public void ThrowException_WhenTakingTurn_AndPositionHasAlreadyBeenTaken()
         {
-            _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Cross);
+            var crossMove = new Move(BoardPosition.TopLeft, PlayerSign.Cross);
+            _ticTacToe.TryToTakeTurn(crossMove);
+            var noughtMove = new Move(BoardPosition.TopLeft, PlayerSign.Nought);
 
-            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Nought);
-            
-            move.Should().Throw<Exception>().WithMessage("This position has already been taken");
+            Action moveAction = () => _ticTacToe.TryToTakeTurn(noughtMove);
+
+            moveAction.Should().Throw<Exception>().WithMessage("This position has already been taken");
         }
 
         [Test]
         public void ThrowException_WhenTakingTurnWithAnX_AndPreviousTurnWasAlsoX()
         {
-            _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Cross);
+            var crossMove = new Move(BoardPosition.TopLeft, PlayerSign.Cross);
+            _ticTacToe.TryToTakeTurn(crossMove);
+            var bottomRightXMove = new Move(BoardPosition.BottomRight, PlayerSign.Cross);
 
-            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.BottomRight, PlayerSign.Cross);
+            Action moveAction = () => _ticTacToe.TryToTakeTurn(bottomRightXMove);
 
-            move.Should().Throw<Exception>().WithMessage($"{PlayerSign.Cross} took the previous turn");
+            moveAction.Should().Throw<Exception>().WithMessage($"{PlayerSign.Cross} took the previous turn");
         }
 
         [Test]
         public void ThrowException_WhenTakingTurn_AndAllPositionsAlreadyTaken()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopLeft, BoardPosition.TopRight, BoardPosition.Top,
-                BoardPosition.Middle, BoardPosition.MiddleLeft, BoardPosition.MiddleRight,
-                BoardPosition.BottomRight, BoardPosition.Bottom, BoardPosition.BottomLeft
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.TopRight, PlayerSign.Nought),
+                new Move(BoardPosition.Top, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleRight, PlayerSign.Nought),
+                new Move(BoardPosition.BottomRight, PlayerSign.Cross),
+                new Move(BoardPosition.Bottom, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross)
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            Action move =  () => _ticTacToe.TryToTakeTurn(BoardPosition.BottomRight, PlayerSign.Nought);
+            var bottomRightOMove = new Move(BoardPosition.BottomRight, PlayerSign.Cross);
 
-            move.Should().Throw<Exception>().WithMessage("No more positions available on the board");
+            Action moveAction =  () => _ticTacToe.TryToTakeTurn(bottomRightOMove);
+
+            moveAction.Should().Throw<Exception>().WithMessage("Game over");
         }
 
         [Test]
         public void BeADraw_IfAllPositionsAreTaken_AndThereIsNoWinner()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopLeft,
-                BoardPosition.Top,
-                BoardPosition.TopRight,
-                BoardPosition.Middle,
-                BoardPosition.MiddleLeft,
-                BoardPosition.BottomLeft,
-                BoardPosition.MiddleRight,
-                BoardPosition.BottomRight,
-                BoardPosition.Bottom
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.Top, PlayerSign.Nought),
+                new Move(BoardPosition.TopRight, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
+                new Move(BoardPosition.BottomRight, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleRight, PlayerSign.Nought),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Cross),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Nought),
+                new Move(BoardPosition.Bottom, PlayerSign.Cross)
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.IsDraw);
+            _ticTacToe.gameState.Should().Be(GameState.IsDraw);
         }
 
         [Test]
         public void SetGameAsWon_WhenXGetThreeHorizontalInARow_WithValidMoves()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopLeft,
-                BoardPosition.MiddleLeft,
-                BoardPosition.Top,
-                BoardPosition.Middle,
-                BoardPosition.TopRight
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
+                new Move(BoardPosition.Top, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
+                new Move(BoardPosition.TopRight, PlayerSign.Cross),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
         public void SetGameAsWon_WhenXGetThreeHorizontalInARow_WithValidMovesInNonSequential()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopRight,
-                BoardPosition.MiddleLeft,
-                BoardPosition.TopLeft,
-                BoardPosition.Middle,
-                BoardPosition.Top
+                new Move(BoardPosition.TopRight, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
+                new Move(BoardPosition.Top, PlayerSign.Cross),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
         public void SetGameAsWon_WhenOGetThreeHorizontalInARow_WithValidMoves()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopLeft,
-                BoardPosition.MiddleLeft,
-                BoardPosition.Top,
-                BoardPosition.Middle,
-                BoardPosition.BottomLeft,
-                BoardPosition.MiddleRight
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
+                new Move(BoardPosition.Top, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleRight, PlayerSign.Nought),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerOWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
         public void SetGameAsWon_WhenXGetThreeVerticalInARow_WithValidMoves()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopLeft,
-                BoardPosition.Top,
-                BoardPosition.MiddleLeft,
-                BoardPosition.TopRight,
-                BoardPosition.BottomLeft
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.Top, PlayerSign.Nought),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Cross),
+                new Move(BoardPosition.TopRight, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
         public void SetGameAsWon_WhenXGetThreeDiagonalInARow_WithValidMoves()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.TopLeft,
-                BoardPosition.Top,
-                BoardPosition.Middle,
-                BoardPosition.TopRight,
-                BoardPosition.BottomRight
+                new Move(BoardPosition.TopLeft, PlayerSign.Cross),
+                new Move(BoardPosition.Top, PlayerSign.Nought),
+                new Move(BoardPosition.Middle, PlayerSign.Cross),
+                new Move(BoardPosition.TopRight, PlayerSign.Nought),
+                new Move(BoardPosition.BottomRight, PlayerSign.Cross),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
         public void SetGameAsWon_WhenXGetThreeDiagonalInARow_WithValidMovesNonOrdered()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.Middle,
-                BoardPosition.Top,
-                BoardPosition.TopRight,
-                BoardPosition.MiddleLeft,
-                BoardPosition.BottomLeft
+                new Move(BoardPosition.Middle, PlayerSign.Cross),
+                new Move(BoardPosition.Top, PlayerSign.Nought),
+                new Move(BoardPosition.TopRight, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
         public void SetGameAsWon_WhenOGetThreeDiagonalInARow_WithValidMovesNonOrdered()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.MiddleRight,
-                BoardPosition.TopLeft,
-                BoardPosition.Bottom,
-                BoardPosition.BottomRight,
-                BoardPosition.BottomLeft,
-                BoardPosition.Middle
+                new Move(BoardPosition.MiddleRight, PlayerSign.Cross),
+                new Move(BoardPosition.TopLeft, PlayerSign.Nought),
+                new Move(BoardPosition.Bottom, PlayerSign.Cross),
+                new Move(BoardPosition.BottomRight, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
-
-            result.Should().Be(GameState.PlayerOWin);
+            _ticTacToe.gameState.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
         public void ReturnValidationError_WhenGameIsWon_AndPlayerTriesToTakeAnotherTurn()
         {
-            var moves = new[]
+            var moves = new List<Move>
             {
-                BoardPosition.MiddleRight,
-                BoardPosition.TopLeft,
-                BoardPosition.Bottom,
-                BoardPosition.BottomRight,
-                BoardPosition.BottomLeft,
-                BoardPosition.Middle
+                new Move(BoardPosition.MiddleRight, PlayerSign.Cross),
+                new Move(BoardPosition.TopLeft, PlayerSign.Nought),
+                new Move(BoardPosition.Bottom, PlayerSign.Cross),
+                new Move(BoardPosition.BottomRight, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought),
             };
 
-            TakeAlternateTurns(moves);
+            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            var result = _ticTacToe.CheckGameForResult();
+            _ticTacToe.gameState.Should().Be(GameState.PlayerOWin);
 
-            result.Should().Be(GameState.PlayerOWin);
-    
-            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.Top, PlayerSign.Cross);
+            var crossTopMove = new Move(BoardPosition.Top, PlayerSign.Cross);
 
-            move.Should().Throw<Exception>();
-        }
+            Action moveAction = () => _ticTacToe.TryToTakeTurn(crossTopMove);
 
-        private void TakeAlternateTurns(BoardPosition[] moves)
-        {
-            var isPlayerX = true;
-
-            foreach (var move in moves)
-            {
-                if (isPlayerX)
-                {
-                    _ticTacToe.TryToTakeTurn(move, PlayerSign.Cross);
-                    isPlayerX = false;
-                }
-                else
-                {
-                    _ticTacToe.TryToTakeTurn(move, PlayerSign.Nought);
-                    isPlayerX = true;
-                }
-            }
+            moveAction.Should().Throw<Exception>("Game is over");
         }
     }
 }

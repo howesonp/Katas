@@ -56,6 +56,7 @@
     <Compile Include="ArabicToRomanNumeralShould.cs" />
     <Compile Include="BowlingGameShould.cs" />
     <Compile Include="CalculationExtensionShould.cs" />
+    <Compile Include="GameOfLifeShould.cs" />
     <Compile Include="FizzBuzzGameShould.cs" />
     <Compile Include="IsTriangleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +71,9 @@
       <Project>{79a126bb-6517-4f1c-9646-722f65f2458a}</Project>
       <Name>CodeKatas</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GameOfLifeRules.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

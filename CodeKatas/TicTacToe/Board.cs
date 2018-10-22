@@ -5,57 +5,45 @@ namespace CodeKatas.TicTacToe
 {
     public class Board
     {
-        public SquareCollection Squares;
-
-        public List<BoardPosition[]> WinLines = new List<BoardPosition[]>
-        {
-            new[]{ BoardPosition.TopLeft, BoardPosition.MiddleLeft, BoardPosition.BottomLeft },
-            new[]{ BoardPosition.Top, BoardPosition.Middle, BoardPosition.Bottom },
-            new[]{ BoardPosition.TopRight, BoardPosition.MiddleRight, BoardPosition.BottomRight },
-            new[]{ BoardPosition.TopLeft, BoardPosition.Top, BoardPosition.TopRight },
-            new[]{ BoardPosition.MiddleLeft, BoardPosition.Middle, BoardPosition.MiddleRight },
-            new[]{ BoardPosition.BottomLeft, BoardPosition.Bottom, BoardPosition.BottomRight },
-            new[]{ BoardPosition.TopLeft, BoardPosition.Middle, BoardPosition.BottomRight },
-            new[]{ BoardPosition.TopRight, BoardPosition.Middle, BoardPosition.BottomLeft },
-            new[]{ BoardPosition.TopLeft, BoardPosition.Top, BoardPosition.TopRight },
-        };
+        private List<Move> _moves;
+        private const int MaximumMoveCount = 9;
+        public PlayerSign lastPlayed;
 
         public Board()
         {
-            Squares = new SquareCollection();
+            _moves = new List<Move>();
         }
 
-        public bool IsSquareFilled(BoardPosition position)
+        public void AddMoveToBoard(BoardPosition position, PlayerSign playerSign)
         {
-            return Squares.IsSquareTaken(position);
+            var move = new Move(position, playerSign);
+
+            ValidateMove(playerSign, move);
+
+            _moves.Add(move);
+
+            lastPlayed = playerSign;
         }
 
-        public bool AreAllSquaresEmpty()
+        private void ValidateMove(PlayerSign playerSign, Move move)
         {
-            return Squares.AreAllEmpty();
+            _moves.CheckFirstPlayerCorrect(playerSign);
+            _moves.CheckIfAllMovesTaken(MaximumMoveCount);
+            _moves.CheckIfPositionTaken(move);
+
+            move.CheckCorrectPlayer(lastPlayed);
         }
 
-        public bool AreAllSquaresTaken()
+        public bool AreAllMovesTaken()
         {
-            return Squares.AreAllTaken();
+            return _moves.Count() == MaximumMoveCount;
         }
 
-        public void UpdateSquare(PlayerSign playerSign, BoardPosition boardPosition)
+        public PlayerSign GetPlayerSignOnBoardPosition(BoardPosition position)
         {
-            Squares.UpdateSquare(boardPosition, playerSign);
-        }
+            var move = _moves.FirstOrDefault(e => e.Position == position);
 
-        public bool CheckWinLines(PlayerSign playerSign)
-        {
-            return WinLines.Select(winLine => CheckLineForWin(winLine, playerSign))
-                .Any(hasWin => hasWin);
-        }
-
-        private bool CheckLineForWin(BoardPosition[] startOfWinLine, PlayerSign playerSign)
-        {
-            return Squares.GetPlayerSignOnBoardPosition(startOfWinLine[0]) == playerSign &&
-                   Squares.GetPlayerSignOnBoardPosition(startOfWinLine[1]) == playerSign &&
-                   Squares.GetPlayerSignOnBoardPosition(startOfWinLine[2]) == playerSign;
+            return move == null ? PlayerSign.Empty : move.PlayerSign;
         }
     }
 }

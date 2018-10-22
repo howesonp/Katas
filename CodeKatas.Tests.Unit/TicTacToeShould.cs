@@ -9,57 +9,49 @@ namespace CodeKatas.Tests.Unit
     [TestFixture]
     public class TicTacToeShould
     {
-        private TicTacToe.TicTacToe _ticTacToe;
+        private TicTacToe.TicTacToeGame _ticTacToe;
 
         [SetUp]
         public void SetUp()
         {
             _ticTacToe = null;
-            _ticTacToe = new TicTacToe.TicTacToe();
+            _ticTacToe = new TicTacToeGame();
         }
-
-        //[Test]
-        //public void ReturnEmptyBoard_WhenCreatingNewGame()
-        //{
-        //    var board = _ticTacToe.Game.Board;
-
-        //    board.Squares.Should()(9);
-        //}
 
         [Test]
         public void PutAnXInPositionOne_WhenTakingFirstTurn_WithAnX()
         {
-            _ticTacToe.PlayerX.TryToTakeTurn(BoardPosition.TopLeft);
+            _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Cross);
             
-            _ticTacToe.Game.Board.Squares.GetPlayerSignOnBoardPosition(BoardPosition.TopLeft).Should().Be(PlayerSign.Cross);
+            _ticTacToe.Board.GetPlayerSignOnBoardPosition(BoardPosition.TopLeft).Should().Be(PlayerSign.Cross);
         }
 
         [Test]
         public void ThrowException_WhenTakingFirstTurn_WithAnO()
         {
-            Action move = () => _ticTacToe.PlayerO.TryToTakeTurn(BoardPosition.TopLeft);
+            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Nought);
 
-            move.Should().Throw<Exception>();
+            move.Should().Throw<Exception>().WithMessage("Nought cannot take the first move");
         }
 
         [Test]
         public void ThrowException_WhenTakingTurn_AndPositionHasAlreadyBeenTaken()
         {
-            _ticTacToe.PlayerX.TryToTakeTurn(BoardPosition.TopLeft);
+            _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Cross);
 
-            Action move = () => _ticTacToe.PlayerO.TryToTakeTurn(BoardPosition.TopLeft);
+            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Nought);
             
-            move.Should().Throw<Exception>();
+            move.Should().Throw<Exception>().WithMessage("This position has already been taken");
         }
 
         [Test]
         public void ThrowException_WhenTakingTurnWithAnX_AndPreviousTurnWasAlsoX()
         {
-            _ticTacToe.PlayerX.TryToTakeTurn(BoardPosition.TopLeft);
+            _ticTacToe.TryToTakeTurn(BoardPosition.TopLeft, PlayerSign.Cross);
 
-            Action move = () => _ticTacToe.PlayerX.TryToTakeTurn(BoardPosition.BottomRight);
+            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.BottomRight, PlayerSign.Cross);
 
-            move.Should().Throw<Exception>();
+            move.Should().Throw<Exception>().WithMessage($"{PlayerSign.Cross} took the previous turn");
         }
 
         [Test]
@@ -73,9 +65,10 @@ namespace CodeKatas.Tests.Unit
             };
 
             TakeAlternateTurns(moves);
-            Action move =  () => _ticTacToe.PlayerO.TryToTakeTurn(BoardPosition.BottomRight);
 
-            move.Should().Throw<Exception>();
+            Action move =  () => _ticTacToe.TryToTakeTurn(BoardPosition.BottomRight, PlayerSign.Nought);
+
+            move.Should().Throw<Exception>().WithMessage("No more positions available on the board");
         }
 
         [Test]
@@ -93,9 +86,12 @@ namespace CodeKatas.Tests.Unit
                 BoardPosition.BottomRight,
                 BoardPosition.Bottom
             };
+
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.IsDraw);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.IsDraw);
         }
 
         [Test]
@@ -112,7 +108,9 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerXWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -129,7 +127,9 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerXWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -147,7 +147,9 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerOWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
@@ -164,7 +166,9 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerXWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -180,8 +184,10 @@ namespace CodeKatas.Tests.Unit
             };
 
             TakeAlternateTurns(moves);
-            
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerXWin);
+
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -198,7 +204,9 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerXWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -216,7 +224,9 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerOWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
@@ -234,9 +244,11 @@ namespace CodeKatas.Tests.Unit
 
             TakeAlternateTurns(moves);
 
-            _ticTacToe.Game.CurrentState.Should().Be(GameState.PlayerOWin);
+            var result = _ticTacToe.CheckGameForResult();
+
+            result.Should().Be(GameState.PlayerOWin);
     
-            Action move = () => _ticTacToe.PlayerX.TryToTakeTurn(BoardPosition.Top);
+            Action move = () => _ticTacToe.TryToTakeTurn(BoardPosition.Top, PlayerSign.Cross);
 
             move.Should().Throw<Exception>();
         }
@@ -249,12 +261,12 @@ namespace CodeKatas.Tests.Unit
             {
                 if (isPlayerX)
                 {
-                    _ticTacToe.PlayerX.TryToTakeTurn(move);
+                    _ticTacToe.TryToTakeTurn(move, PlayerSign.Cross);
                     isPlayerX = false;
                 }
                 else
                 {
-                    _ticTacToe.PlayerO.TryToTakeTurn(move);
+                    _ticTacToe.TryToTakeTurn(move, PlayerSign.Nought);
                     isPlayerX = true;
                 }
             }

@@ -46,16 +46,14 @@
     <Compile Include="BowlingGame\ScoreCard.cs" />
     <Compile Include="BowlingGame\Throw.cs" />
     <Compile Include="GameOfLife\Cell.cs" />
-    <Compile Include="GameOfLife\AdjacentCells.cs" />
     <Compile Include="GameOfLife\Game.cs" />
     <Compile Include="GameOfLife\Grid.cs" />
-    <Compile Include="GameOfLife\Posiiton.cs" />
-    <Compile Include="GameOfLife\State.cs" />
     <Compile Include="StringCalculatorExtensions.cs" />
     <Compile Include="BowlingGame\BowlingGameExtensions.cs" />
     <Compile Include="CalculationExtensions.cs" />
     <Compile Include="FizzBuzzGame.cs" />
     <Compile Include="StringCalculator.cs" />
+    <Compile Include="GameOfLife\Coordinate.cs" />
     <Compile Include="TicTacToe\GameWinOptions.cs" />
     <Compile Include="TicTacToe\BoardPosition.cs" />
     <Compile Include="TicTacToe\GameState.cs" />

@@ -85,7 +85,7 @@ namespace CodeKatas.Tests.Unit
 
             Action moveAction =  () => _ticTacToe.TryToTakeTurn(bottomRightOMove);
 
-            moveAction.Should().Throw<Exception>().WithMessage("Game over");
+            moveAction.Should().Throw<Exception>().WithMessage("No more positions available on the board");
         }
 
         [Test]
@@ -101,12 +101,12 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.MiddleRight, PlayerSign.Nought),
                 new Move(BoardPosition.MiddleLeft, PlayerSign.Cross),
                 new Move(BoardPosition.BottomLeft, PlayerSign.Nought),
-                new Move(BoardPosition.Bottom, PlayerSign.Cross)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.Bottom, PlayerSign.Cross);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.IsDraw);
+            gameState.Should().Be(GameState.IsDraw);
         }
 
         [Test]
@@ -117,13 +117,13 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.TopLeft, PlayerSign.Cross),
                 new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
                 new Move(BoardPosition.Top, PlayerSign.Cross),
-                new Move(BoardPosition.Middle, PlayerSign.Nought),
-                new Move(BoardPosition.TopRight, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.TopRight, PlayerSign.Cross);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
+            gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -134,13 +134,13 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.TopRight, PlayerSign.Cross),
                 new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
                 new Move(BoardPosition.TopLeft, PlayerSign.Cross),
-                new Move(BoardPosition.Middle, PlayerSign.Nought),
-                new Move(BoardPosition.Top, PlayerSign.Cross),
+                new Move(BoardPosition.Middle, PlayerSign.Nought)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.Top, PlayerSign.Cross);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
+            gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -152,13 +152,13 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
                 new Move(BoardPosition.Top, PlayerSign.Cross),
                 new Move(BoardPosition.Middle, PlayerSign.Nought),
-                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
-                new Move(BoardPosition.MiddleRight, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.MiddleRight, PlayerSign.Nought);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerOWin);
+            gameState.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
@@ -169,13 +169,13 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.TopLeft, PlayerSign.Cross),
                 new Move(BoardPosition.Top, PlayerSign.Nought),
                 new Move(BoardPosition.MiddleLeft, PlayerSign.Cross),
-                new Move(BoardPosition.TopRight, PlayerSign.Nought),
-                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
+                new Move(BoardPosition.TopRight, PlayerSign.Nought)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.BottomLeft, PlayerSign.Cross);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
+            gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -186,13 +186,13 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.TopLeft, PlayerSign.Cross),
                 new Move(BoardPosition.Top, PlayerSign.Nought),
                 new Move(BoardPosition.Middle, PlayerSign.Cross),
-                new Move(BoardPosition.TopRight, PlayerSign.Nought),
-                new Move(BoardPosition.BottomRight, PlayerSign.Cross),
+                new Move(BoardPosition.TopRight, PlayerSign.Nought)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.BottomRight, PlayerSign.Cross);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
+            gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -203,13 +203,13 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.Middle, PlayerSign.Cross),
                 new Move(BoardPosition.Top, PlayerSign.Nought),
                 new Move(BoardPosition.TopRight, PlayerSign.Cross),
-                new Move(BoardPosition.MiddleLeft, PlayerSign.Nought),
-                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
+                new Move(BoardPosition.MiddleLeft, PlayerSign.Nought)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.BottomLeft, PlayerSign.Cross);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
+            gameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -221,37 +221,19 @@ namespace CodeKatas.Tests.Unit
                 new Move(BoardPosition.TopLeft, PlayerSign.Nought),
                 new Move(BoardPosition.Bottom, PlayerSign.Cross),
                 new Move(BoardPosition.BottomRight, PlayerSign.Nought),
-                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
-                new Move(BoardPosition.Middle, PlayerSign.Nought),
+                new Move(BoardPosition.BottomLeft, PlayerSign.Cross)
             };
 
-            moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
+            var finalMove = new Move(BoardPosition.Middle, PlayerSign.Nought);
+            var gameState = GetFinalGameState(moves, finalMove);
 
-            _ticTacToe.GameState.Should().Be(GameState.PlayerOWin);
+            gameState.Should().Be(GameState.PlayerOWin);
         }
 
-        [Test]
-        public void ReturnValidationError_WhenGameIsWon_AndPlayerTriesToTakeAnotherTurn()
+        private GameState GetFinalGameState(List<Move> moves, Move finalMove)
         {
-            var moves = new List<Move>
-            {
-                new Move(BoardPosition.MiddleRight, PlayerSign.Cross),
-                new Move(BoardPosition.TopLeft, PlayerSign.Nought),
-                new Move(BoardPosition.Bottom, PlayerSign.Cross),
-                new Move(BoardPosition.BottomRight, PlayerSign.Nought),
-                new Move(BoardPosition.BottomLeft, PlayerSign.Cross),
-                new Move(BoardPosition.Middle, PlayerSign.Nought),
-            };
-
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
-
-            _ticTacToe.GameState.Should().Be(GameState.PlayerOWin);
-
-            var crossTopMove = new Move(BoardPosition.Top, PlayerSign.Cross);
-
-            Action moveAction = () => _ticTacToe.TryToTakeTurn(crossTopMove);
-
-            moveAction.Should().Throw<Exception>("Game is over");
+            return _ticTacToe.TryToTakeTurn(finalMove);
         }
     }
 }

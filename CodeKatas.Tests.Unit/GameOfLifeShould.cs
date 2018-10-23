@@ -29,8 +29,8 @@ namespace CodeKatas.Tests.Unit
         [Test]
         public void ReturnOneLiveCell_GivenGridWithOneLiveCell()
         {
-            var position = new Coordinate(1, 1);
-            var cell = new Cell(position, State.Alive);
+            var coordinate = new Coordinate(1, 1);
+            var cell = new Cell(coordinate);
             var listOfCells = new List<Cell> { cell };
             var grid = new Grid();
 

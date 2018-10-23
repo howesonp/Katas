@@ -1,14 +1,14 @@
 ﻿namespace CodeKatas.GameOfLife
 {
-    public struct Position
+    public class Coordinate
     {
-        public int XAxis;
-        public int YAxis;
+        private int xAxix;
+        private int yAxis;
 
-        public Position(int xAxis, int yAxis)
+        public Coordinate(int xAxix, int yAxis)
         {
-            XAxis = xAxis;
-            YAxis = yAxis;
+            this.xAxix = xAxix;
+            this.yAxis = yAxis;
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿namespace CodeKatas.GameOfLife
 {
-    public struct Cell
+    public class Cell
     {
-        public Position position;
-        public State state;
+        public Coordinate coordinate;
 
-        public Cell(Position position, State state)
+        public Cell(Coordinate coordinate)
         {
-            this.position = position;
-            this.state = state;
+            this.coordinate = coordinate;
         }
     }
 }

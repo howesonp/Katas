@@ -45,6 +45,7 @@
     <Compile Include="BowlingGame\Frame.cs" />
     <Compile Include="BowlingGame\ScoreCard.cs" />
     <Compile Include="BowlingGame\Throw.cs" />
+    <Compile Include="GameOfLife\AdjacentCells.cs" />
     <Compile Include="GameOfLife\Cell.cs" />
     <Compile Include="GameOfLife\Game.cs" />
     <Compile Include="GameOfLife\Grid.cs" />

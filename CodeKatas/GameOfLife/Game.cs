@@ -1,15 +1,27 @@
-﻿namespace CodeKatas.GameOfLife
+﻿using System;
+using System.Collections.Generic;
+
+namespace CodeKatas.GameOfLife
 {
     public class Game
     {
-        public Grid Tick(Grid startGrid)
+        private Grid grid;
+
+        public Game(Grid grid)
         {
-            if (startGrid.GridIsEmpty())
+            this.grid = grid;
+        }
+
+        public Grid Tick()
+        {
+            if (grid.Equals(new Grid(new List<Cell>())))
             {
-                return startGrid;
+                return grid;
             }
 
-            return startGrid;
-        }
+            var regeneratedGrid = grid.Regenerate();
+
+            return regeneratedGrid;
+        }    
     }
 }

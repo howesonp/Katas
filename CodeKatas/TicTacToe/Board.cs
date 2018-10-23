@@ -6,9 +6,9 @@ namespace CodeKatas.TicTacToe
 {
     internal class Board
     {
-        private List<Move> _moves;
+        private readonly List<Move> _moves;
         private const int MaximumMoveCount = 9;
-        public PlayerSign lastPlayed;
+        public PlayerSign LastPlayed;
 
         public Board()
         {
@@ -19,26 +19,35 @@ namespace CodeKatas.TicTacToe
         {
             ValidateMove(move);
             _moves.Add(move);
-            lastPlayed = move.PlayerSign;
+            LastPlayed = move.PlayerSign;
         }
 
         public PlayerSign GetPlayerSignOnBoardPosition(BoardPosition position)
         {
             var move = _moves.FirstOrDefault(e => e.Position == position);
 
-            return move == null ? PlayerSign.Empty : move.PlayerSign;
+            return move?.PlayerSign ?? PlayerSign.Empty;
         }
 
         public GameState CheckForResult()
         {
-            var isWin = CheckWinLines();
+            var isWin = CheckWinLines(LastPlayed);
 
             if (isWin)
             {
-                return lastPlayed == PlayerSign.Cross ? GameState.PlayerXWin : GameState.PlayerOWin;
+                return LastPlayed == PlayerSign.Cross ? GameState.PlayerXWin : GameState.PlayerOWin;
             }
 
-            return AreAllMovesTaken() ? GameState.IsDraw : GameState.InProgress;
+            return _moves.Count() == MaximumMoveCount ? GameState.IsDraw : GameState.InProgress;
+        }
+
+        private bool CheckWinLines(PlayerSign playerSign)
+        {
+            return GameWinOptions.Lines.Select(winLine =>
+                    GetPlayerSignOnBoardPosition(winLine[0]) == playerSign &&
+                    GetPlayerSignOnBoardPosition(winLine[1]) == playerSign &&
+                    GetPlayerSignOnBoardPosition(winLine[2]) == playerSign)
+                .Any(hasWin => hasWin);
         }
 
         private void ValidateMove(Move move)
@@ -65,9 +74,9 @@ namespace CodeKatas.TicTacToe
             }
         }
 
-        private void CheckIfAllMovesTaken(int MaximumMoveCount)
+        private void CheckIfAllMovesTaken(int maximumMoveCount)
         {
-            if (_moves.Count() == MaximumMoveCount)
+            if (_moves.Count() == maximumMoveCount)
             {
                 throw new Exception("No more positions available on the board");
             }
@@ -75,26 +84,10 @@ namespace CodeKatas.TicTacToe
 
         private void CheckCorrectPlayer(Move move)
         {
-            if (move.PlayerSign == lastPlayed)
+            if (move.PlayerSign == LastPlayed)
             {
                 throw new Exception($"{move.PlayerSign} took the previous turn");
             }
-        }
-
-        private bool AreAllMovesTaken()
-        {
-            return _moves.Count() == MaximumMoveCount;
-        }
-
-        private bool CheckWinLines()
-        {
-            var winningOptions = new GameWinOptions();
-
-            return winningOptions.Lines.Select(winLine =>
-                            GetPlayerSignOnBoardPosition(winLine[0]) == lastPlayed &&
-                            GetPlayerSignOnBoardPosition(winLine[1]) == lastPlayed &&
-                            GetPlayerSignOnBoardPosition(winLine[2]) == lastPlayed)
-                    .Any(hasWin => hasWin);
         }
     }
 }

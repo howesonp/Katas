@@ -106,7 +106,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.IsDraw);
+            _ticTacToe.GameState.Should().Be(GameState.IsDraw);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerOWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerXWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerXWin);
         }
 
         [Test]
@@ -227,7 +227,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerOWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerOWin);
         }
 
         [Test]
@@ -245,7 +245,7 @@ namespace CodeKatas.Tests.Unit
 
             moves.ForEach(move => _ticTacToe.TryToTakeTurn(move));
 
-            _ticTacToe.gameState.Should().Be(GameState.PlayerOWin);
+            _ticTacToe.GameState.Should().Be(GameState.PlayerOWin);
 
             var crossTopMove = new Move(BoardPosition.Top, PlayerSign.Cross);
 

@@ -2,7 +2,7 @@
 
 namespace CodeKatas.TicTacToe
 {
-    public static class GameStateExtensions
+    internal static class GameStateExtensions
     {
         public static void CheckIfIsGameOver(this GameState currentGameState)
         {

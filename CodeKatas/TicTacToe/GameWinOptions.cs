@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace CodeKatas.TicTacToe
 {
-    public class GameWinOptions
+    internal static class GameWinOptions
     {
-        public List<BoardPosition[]> Lines = new List<BoardPosition[]>
+        public static List<BoardPosition[]> Lines = new List<BoardPosition[]>
         {
             new[]{ BoardPosition.TopLeft, BoardPosition.MiddleLeft, BoardPosition.BottomLeft },
             new[]{ BoardPosition.Top, BoardPosition.Middle, BoardPosition.Bottom },

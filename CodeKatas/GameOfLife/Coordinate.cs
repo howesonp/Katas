@@ -5,10 +5,10 @@
         public int XAxis;
         public int YAxis;
 
-        public Position(int XAxis, int YAxis)
+        public Position(int xAxis, int yAxis)
         {
-            this.XAxis = XAxis;
-            this.YAxis = YAxis;
+            XAxis = xAxis;
+            YAxis = yAxis;
         }
     }
 }

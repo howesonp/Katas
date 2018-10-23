@@ -57,7 +57,6 @@
     <Compile Include="TicTacToe\GameWinOptions.cs" />
     <Compile Include="TicTacToe\BoardPosition.cs" />
     <Compile Include="TicTacToe\GameState.cs" />
-    <Compile Include="TicTacToe\GameStateExtensions.cs" />
     <Compile Include="TicTacToe\PlayerSign.cs" />
     <Compile Include="TicTacToe\Move.cs" />
     <Compile Include="TicTacToe\Board.cs" />

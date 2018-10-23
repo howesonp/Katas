@@ -6,18 +6,18 @@ namespace CodeKatas.GameOfLife
     {
         private List<Cell> _cells;
 
-        public Grid()
+        public Grid(List<Cell> inputCells)
         {
-            _cells = new List<Cell>();
+            _cells = inputCells;
         }
 
-        public void SeedCells(List<Cell> inputCells)
-        {
-            inputCells.ForEach(cell =>
-            {
-                _cells.Add(cell); 
-            });
-        }
+        //public void SeedCells(List<Cell> inputCells)
+        //{
+        //    inputCells.ForEach(cell =>
+        //    {
+        //        _cells.Add(cell); 
+        //    });
+        //}
 
         public bool GridIsEmpty()
         {

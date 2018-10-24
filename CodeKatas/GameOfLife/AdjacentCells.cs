@@ -4,18 +4,18 @@ namespace CodeKatas.GameOfLife
 {
     internal class AdjacentCells
     {
-        internal List<Cell> Neighbours = new List<Cell>
+        internal List<Coordinate> Neighbours = new List<Coordinate>
         {
-            new Cell(new Coordinate(1, 1), true),
-            new Cell(new Coordinate(1, 0), true),
-            new Cell(new Coordinate(1, -1), true),
+            new Coordinate(1, 1), 
+            new Coordinate(1, 0), 
+            new Coordinate(1, -1),
 
-            new Cell(new Coordinate(0, 1), true),
-            new Cell(new Coordinate(0, -1), true),
+            new Coordinate(0, 1), 
+            new Coordinate(0, -1),
 
-            new Cell(new Coordinate(-1, -1), true),
-            new Cell(new Coordinate(-1, 0), true),
-            new Cell(new Coordinate(-1, 1), true)
+            new Coordinate(-1, -1),
+            new Coordinate(-1, 0),
+            new Coordinate(-1, 1),
         };
     }
 }

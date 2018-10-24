@@ -14,7 +14,17 @@ namespace CodeKatas.GameOfLife
 
         protected bool Equals(Grid other)
         {
-            return _cells == other._cells;
+            var isEqual = true;
+
+            _cells.ForEach(cell =>
+            {
+                if (!other._cells.Any(otherCell => cell.Equals(otherCell)))
+                {
+                    isEqual = false;
+                }
+            });
+
+            return isEqual;
         }
 
         public override bool Equals(object obj)
@@ -33,37 +43,37 @@ namespace CodeKatas.GameOfLife
         public Grid Regenerate()
         {
             var count = 0;
-
+            var returnCells = new List<Cell>();
             foreach (var cell in _cells)
             {
                 count = GetNumberOfAdjacentLiveCellsForCell(cell);
 
                 // Underpopulation
                 // Any live cell with fewer than two live neighbours dies, as if by loneliness.
-                if (cell.IsAlive && count < 2)
+                if (cell.state == CellState.Alive && count < 2)
                 {
-                    cell.IsAlive = false;
+                    cell.state = CellState.Dead;
                 }
 
                 // Overpopulation
                 // Any live cell with more than three live neighbours dies, as if by overcrowding.
-                if (cell.IsAlive && count > 3)
+                if (cell.state == CellState.Alive && count > 3)
                 {
-                    cell.IsAlive = false;
+                    cell.state = CellState.Dead;
                 }
 
                 // Unchanged
                 // Any live cell with two or three live neighbours lives, unchanged, to the next generation.
-                if (cell.IsAlive && (count == 3 || count == 2))
+                if (cell.state == CellState.Alive && (count == 3 || count == 2))
                 {
-                    cell.IsAlive = true;
+                    cell.state = CellState.Alive;
                 }
                 // Any dead cell with exactly three live neighbours comes to life.
                 // Bring to life
-                if (!cell.IsAlive && count == 3)
-                {
-                    cell.IsAlive = true;
-                }
+                //if (cell.state == CellState.Dead && count == 3)
+                //{
+                //    cell.IsAlive = true;
+                //}
             }
 
             return new Grid(_cells);
@@ -76,10 +86,10 @@ namespace CodeKatas.GameOfLife
 
             adjacentCell.Neighbours.ForEach(neighbour =>
             {
-                var xAxis = cell.coordinate.XAxis + neighbour.coordinate.XAxis;
-                var yAxis = cell.coordinate.YAxis + neighbour.coordinate.YAxis;
+                var xAxis = cell.coordinate.XAxis + neighbour.XAxis;
+                var yAxis = cell.coordinate.YAxis + neighbour.YAxis;
 
-                var cellToMatch = new Cell(new Coordinate(xAxis, yAxis), true);
+                var cellToMatch = new Cell(new Coordinate(xAxis, yAxis), CellState.Alive);
 
                 liveNeighbours += _cells.Count(x => x.Equals(cellToMatch));
 

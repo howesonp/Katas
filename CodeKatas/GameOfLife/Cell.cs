@@ -3,17 +3,17 @@
     public class Cell
     {
         public Coordinate coordinate;
-        public bool IsAlive { get; set; }
+        public CellState state;
 
-        public Cell(Coordinate coordinate, bool isAlive)
+        public Cell(Coordinate coordinate, CellState cellState)
         {
             this.coordinate = coordinate;
-            this.IsAlive = isAlive;
+            this.state = cellState;
         }
 
         protected bool Equals(Cell other)
         {
-            return coordinate.Equals(other.coordinate) && IsAlive == other.IsAlive;
+            return coordinate.Equals(other.coordinate) && state == other.state;
         }
 
         public override bool Equals(object obj)

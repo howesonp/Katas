@@ -1,0 +1,36 @@
+﻿
+@model IEnumerable<CodeKatas.GameOfLife.Cell>
+
+@{
+    ViewBag.Title = "Grid";
+}
+
+<h2>Grid</h2>
+<button>Start</button>
+<table>
+
+    @*@foreach (var item in @Model)
+    {
+        <tr>
+            @for (int c = 0; c < @Model.Count(); c++)
+            {
+                <td onclick="" style="border-style:solid" width="70" height="45">item.state</td>
+            }
+        </tr>
+    }*@
+
+    @for (int i = 0; i < 10; i++)
+    {
+        <tr>
+            @for (int c = 0; c < 10; c++)
+            {
+                <td onclick="" style="border-style:solid" width="70" height="45"></td>
+            }
+        </tr>
+    }
+</table>
+
+<script>
+
+</script>
+

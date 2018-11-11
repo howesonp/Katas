@@ -14,7 +14,7 @@ namespace CodeKatas.GameOfLife
 
         public Grid Tick()
         {
-            if (grid.Equals(new Grid(new List<Cell>())))
+            if (grid.Equals(new EmptyGrid()))
             {
                 return grid;
             }

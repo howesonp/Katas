@@ -16,9 +16,14 @@ namespace CodeKatas.GameOfLife
         {
             var isEqual = true;
 
+            if (_cells.Count != other._cells.Count)
+            {
+                return false;
+            }
+
             _cells.ForEach(cell =>
             {
-                if (!other._cells.Any(otherCell => cell.Equals(otherCell)))
+                if (!other._cells.Any(cell.Equals))
                 {
                     isEqual = false;
                 }
@@ -43,41 +48,87 @@ namespace CodeKatas.GameOfLife
         public Grid Regenerate()
         {
             var newCells = new List<Cell>();
-            foreach (var cell in _cells)
+
+            // work out the grid size
+            // get the cell neighbours for each grid cell
+            // get the number of live cells neighbours for each grid cell
+
+            var totalCells = CellsToCheck();
+
+            foreach (var cell in totalCells)
+            //foreach (var cell in _cells)
             {
-                AddCellToRegeneratedGrid(cell, newCells);
+                var newCell = CalculateCellStatusOnNewGrid(cell);
+
+                if (newCell != null)
+                {
+                    newCells.Add(newCell);
+                }      
             }
 
             return new Grid(newCells);
         }
 
-        private void AddCellToRegeneratedGrid(Cell cell, List<Cell> returnCells)
+        private IEnumerable<Cell> CellsToCheck()
         {
-            // Underpopulation
+            var xAxis = _cells.Min(e => e.Coordinate.XAxis) < _cells.Min(y => y.Coordinate.YAxis) 
+                ? _cells.Min(e => e.Coordinate.XAxis) 
+                : _cells.Min(y => y.Coordinate.YAxis);
+
+            var yAxis = _cells.Max(y => y.Coordinate.YAxis) > _cells.Max(x => x.Coordinate.XAxis) 
+                ? _cells.Max(y => y.Coordinate.YAxis) 
+                : _cells.Max(x => x.Coordinate.XAxis);
+
+            var returnCells = new List<Cell>();
+
+            for (var x = xAxis; x <= yAxis; x++)
+            {
+                var counter = yAxis;
+
+                while (counter >= xAxis)
+                {
+                    returnCells.Add(new Cell(new Coordinate(x, counter), CellState.Alive));
+                    counter--;
+                }
+            }
+
+            return returnCells;
+        }
+
+        private Cell CalculateCellStatusOnNewGrid(Cell cell)
+        {
             // Any live cell with fewer than two live neighbours dies, as if by loneliness.
-
-            // Overpopulation
             // Any live cell with more than three live neighbours dies, as if by overcrowding.
-
-            //// Unchanged
-            //// Any live cell with two or three live neighbours lives, unchanged, to the next generation.
-
+            // Any live cell with two or three live neighbours lives, unchanged, to the next generation.
             // Any dead cell with exactly three live neighbours comes to life.
 
             var neighbouringCells = cell.GetCellNeighours();
 
             var count = NumberOfLiveNeighbours(neighbouringCells);
 
-            // Bring to life
             if (count < 2 || count > 3)
             {
                 // don't add the cell
             }
 
-            if (count == 2 || count == 3)
+
+
+            if (count == 2)
             {
-                returnCells.Add(cell);
+                if (_cells.Any(existing => existing.Equals(cell)))
+                {
+                    return cell;
+                }
             }
+
+            if (count == 3)
+            {
+                return cell;
+            }
+
+
+
+            return null;
         }
 
         private int NumberOfLiveNeighbours(List<Cell> neighbouringCells)

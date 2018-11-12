@@ -40,44 +40,28 @@ namespace CodeKatas.GameOfLife
             return Equals((Grid)obj);
         }
 
-        public override int GetHashCode()
-        {
-            return 908360967 + EqualityComparer<List<Cell>>.Default.GetHashCode(_cells);
-        }
-
         public Grid Regenerate()
         {
-            var newCells = new List<Cell>();
+            var gridCellsToCheck = GetGridCellsToCheck();
 
-            // work out the grid size
-            // get the cell neighbours for each grid cell
-            // get the number of live cells neighbours for each grid cell
+            //foreach (var cell in gridCellsToCheck)
+            //{
+            //    var newCell = CalculateCellStatusOnNewGrid(cell);
+            //}
 
-            var totalCells = CellsToCheck();
-
-            foreach (var cell in totalCells)
-            //foreach (var cell in _cells)
-            {
-                var newCell = CalculateCellStatusOnNewGrid(cell);
-
-                if (newCell != null)
-                {
-                    newCells.Add(newCell);
-                }      
-            }
+            var newCells = gridCellsToCheck
+                                .Select(CalculateCellStatusOnNewGrid)
+                                .Where(newCell => newCell != null)
+                                .ToList();
 
             return new Grid(newCells);
         }
 
-        private IEnumerable<Cell> CellsToCheck()
+        private IEnumerable<Cell> GetGridCellsToCheck()
         {
-            var xAxis = _cells.Min(e => e.Coordinate.XAxis) < _cells.Min(y => y.Coordinate.YAxis) 
-                ? _cells.Min(e => e.Coordinate.XAxis) - 1
-                : _cells.Min(y => y.Coordinate.YAxis) - 1;
+            var xAxis = GetXAxisStartPoint();
 
-            var yAxis = _cells.Max(y => y.Coordinate.YAxis) > _cells.Max(x => x.Coordinate.XAxis) 
-                ? _cells.Max(y => y.Coordinate.YAxis) + 1
-                : _cells.Max(x => x.Coordinate.XAxis) + 1;
+            var yAxis = GetYAxisStartPoint();
 
             var returnCells = new List<Cell>();
 
@@ -87,12 +71,30 @@ namespace CodeKatas.GameOfLife
 
                 while (counter >= xAxis)
                 {
-                    returnCells.Add(new Cell(new Coordinate(x, counter), CellState.Alive));
+                    returnCells.Add(new Cell(new Coordinate(x, counter)));
                     counter--;
                 }
             }
 
             return returnCells;
+        }
+
+        private int GetYAxisStartPoint()
+        {
+            var yAxis = _cells.Max(y => y.Coordinate.YAxis) > _cells.Max(x => x.Coordinate.XAxis)
+                ? _cells.Max(y => y.Coordinate.YAxis)
+                : _cells.Max(x => x.Coordinate.XAxis);
+
+            return yAxis + 1;
+        }
+
+        private int GetXAxisStartPoint()
+        {
+            var xAxis = _cells.Min(e => e.Coordinate.XAxis) < _cells.Min(y => y.Coordinate.YAxis)
+                ? _cells.Min(e => e.Coordinate.XAxis)
+                : _cells.Min(y => y.Coordinate.YAxis);
+
+            return xAxis - 1;
         }
 
         private Cell CalculateCellStatusOnNewGrid(Cell cell)
@@ -113,6 +115,7 @@ namespace CodeKatas.GameOfLife
 
             if (count == 2)
             {
+                // Only add the cell if it exists in current set - is alive.
                 if (_cells.Any(existing => existing.Equals(cell)))
                 {
                     return cell;

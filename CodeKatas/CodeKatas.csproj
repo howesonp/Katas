@@ -47,9 +47,8 @@
     <Compile Include="BowlingGame\Throw.cs" />
     <Compile Include="GameOfLife\AdjacentCells.cs" />
     <Compile Include="GameOfLife\Cell.cs" />
-    <Compile Include="GameOfLife\CellState.cs" />
     <Compile Include="GameOfLife\EmptyGrid.cs" />
-    <Compile Include="GameOfLife\Game.cs" />
+    <Compile Include="GameOfLifeGame.cs" />
     <Compile Include="GameOfLife\Grid.cs" />
     <Compile Include="StringCalculatorExtensions.cs" />
     <Compile Include="BowlingGame\BowlingGameExtensions.cs" />

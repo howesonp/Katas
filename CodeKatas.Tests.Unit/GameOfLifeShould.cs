@@ -12,7 +12,7 @@ namespace CodeKatas.Tests.Unit
         public void ReturnEmptyGrid_GivenInitialEmptyGrid()
         {
             var grid = new EmptyGrid();
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var returnGrid = game.Tick();
 
             returnGrid.Should().Be(new EmptyGrid());
@@ -27,20 +27,20 @@ namespace CodeKatas.Tests.Unit
 
             var listOfCells = new List<Cell>
             {
-                new Cell(new Coordinate(1,1), CellState.Alive),
-                new Cell(new Coordinate(2,1), CellState.Alive),
-                new Cell(new Coordinate(3,1), CellState.Alive)
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(2,1)),
+                new Cell(new Coordinate(3,1))
             };
 
             var expectedReturnCells = new List<Cell>
             {
-                new Cell(new Coordinate(2,0), CellState.Alive),
-                new Cell(new Coordinate(2,1), CellState.Alive),
-                new Cell(new Coordinate(2,2), CellState.Alive)
+                new Cell(new Coordinate(2,0)),
+                new Cell(new Coordinate(2,1)),
+                new Cell(new Coordinate(2,2))
             };
 
             var grid = new Grid(listOfCells);
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
             var returnGrid = game.Tick();
@@ -57,21 +57,21 @@ namespace CodeKatas.Tests.Unit
 
             var listOfCells = new List<Cell>
             {
-                new Cell(new Coordinate(1,3), CellState.Alive),
-                new Cell(new Coordinate(2,2), CellState.Alive),
-                new Cell(new Coordinate(3,1), CellState.Alive),
-                new Cell(new Coordinate(3,3), CellState.Alive),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(3,1)),
+                new Cell(new Coordinate(3,3)),
             };
 
             var expectedReturnCells = new List<Cell>
             {
-                new Cell(new Coordinate(2,2), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive),
-                new Cell(new Coordinate(3,2), CellState.Alive)
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,2))
             };
 
             var grid = new Grid(listOfCells);
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
             var returnGrid = game.Tick();
@@ -89,25 +89,25 @@ namespace CodeKatas.Tests.Unit
 
             var listOfCells = new List<Cell>
             {
-                new Cell(new Coordinate(1,1), CellState.Alive),
-                new Cell(new Coordinate(1,2), CellState.Alive),
-                new Cell(new Coordinate(1,3), CellState.Alive),
-                new Cell(new Coordinate(2,2), CellState.Alive)
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,2))
             };
 
             var expectedReturnCells = new List<Cell>
             {
-                new Cell(new Coordinate(0,2), CellState.Alive),
-                new Cell(new Coordinate(1,1), CellState.Alive),
-                new Cell(new Coordinate(1,2), CellState.Alive),
-                new Cell(new Coordinate(1,3), CellState.Alive),
-                new Cell(new Coordinate(2,1), CellState.Alive),
-                new Cell(new Coordinate(2,2), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive)
+                new Cell(new Coordinate(0,2)),
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,1)),
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3))
             };
 
             var grid = new Grid(listOfCells);
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
             var returnGrid = game.Tick();
@@ -125,24 +125,24 @@ namespace CodeKatas.Tests.Unit
 
             var listOfCells = new List<Cell>
             {
-                new Cell(new Coordinate(1,1), CellState.Alive),
-                new Cell(new Coordinate(1,2), CellState.Alive),
-                new Cell(new Coordinate(1,3), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive),
-                new Cell(new Coordinate(3,3), CellState.Alive)
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,3))
             };
 
             var expectedReturnCells = new List<Cell>
             {
-                new Cell(new Coordinate(0,2), CellState.Alive),
-                new Cell(new Coordinate(1,2), CellState.Alive),
-                new Cell(new Coordinate(1,3), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive),
-                new Cell(new Coordinate(2,4), CellState.Alive),
+                new Cell(new Coordinate(0,2)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(2,4)),
             };
 
             var grid = new Grid(listOfCells);
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
             var returnGrid = game.Tick();
@@ -160,27 +160,27 @@ namespace CodeKatas.Tests.Unit
 
             var listOfCells = new List<Cell>
             {
-                new Cell(new Coordinate(1,1), CellState.Alive),
-                new Cell(new Coordinate(1,2), CellState.Alive),
-                new Cell(new Coordinate(1,4), CellState.Alive),
-                new Cell(new Coordinate(2,2), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive),
-                new Cell(new Coordinate(3,1), CellState.Alive),
-                new Cell(new Coordinate(3,2), CellState.Alive),
-                new Cell(new Coordinate(4,1), CellState.Alive),
-                new Cell(new Coordinate(4,2), CellState.Alive)
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,4)),
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,1)),
+                new Cell(new Coordinate(3,2)),
+                new Cell(new Coordinate(4,1)),
+                new Cell(new Coordinate(4,2))
             };
 
             var expectedReturnCells = new List<Cell>
             {
-                new Cell(new Coordinate(1,1), CellState.Alive),
-                new Cell(new Coordinate(1,2), CellState.Alive),
-                new Cell(new Coordinate(4,1), CellState.Alive),
-                new Cell(new Coordinate(4,2), CellState.Alive)
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(4,1)),
+                new Cell(new Coordinate(4,2))
             };
 
             var grid = new Grid(listOfCells);
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
             var returnGrid = game.Tick();
@@ -198,21 +198,21 @@ namespace CodeKatas.Tests.Unit
             
             var listOfCells = new List<Cell>
             {
-                new Cell(new Coordinate(2,2), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive),
-                new Cell(new Coordinate(3,2), CellState.Alive)
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,2))
             };
 
             var expectedReturnCells = new List<Cell>
             {
-                new Cell(new Coordinate(2,2), CellState.Alive),
-                new Cell(new Coordinate(2,3), CellState.Alive),
-                new Cell(new Coordinate(3,2), CellState.Alive),
-                new Cell(new Coordinate(3,3), CellState.Alive)
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,2)),
+                new Cell(new Coordinate(3,3))
             };
 
             var grid = new Grid(listOfCells);
-            var game = new Game(grid);
+            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
             var returnGrid = game.Tick();

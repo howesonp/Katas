@@ -5,17 +5,15 @@ namespace CodeKatas.GameOfLife
     public class Cell
     {
         public Coordinate Coordinate;
-        public CellState State;
 
-        public Cell(Coordinate coordinate, CellState state)
+        public Cell(Coordinate coordinate)
         {
             Coordinate = coordinate;
-            State = state;
         }
 
         protected bool Equals(Cell other)
         {
-            return Coordinate.Equals(other.Coordinate) && State == other.State;
+            return Coordinate.Equals(other.Coordinate);
         }
 
         public override bool Equals(object obj)
@@ -44,7 +42,7 @@ namespace CodeKatas.GameOfLife
             var xAxis = cell.Coordinate.XAxis + neighbour.XAxis;
             var yAxis = cell.Coordinate.YAxis + neighbour.YAxis;
 
-            var cellToMatch = new Cell(new Coordinate(xAxis, yAxis), CellState.Alive);
+            var cellToMatch = new Cell(new Coordinate(xAxis, yAxis));
             return cellToMatch;
         }
     }

@@ -72,12 +72,12 @@ namespace CodeKatas.GameOfLife
         private IEnumerable<Cell> CellsToCheck()
         {
             var xAxis = _cells.Min(e => e.Coordinate.XAxis) < _cells.Min(y => y.Coordinate.YAxis) 
-                ? _cells.Min(e => e.Coordinate.XAxis) 
-                : _cells.Min(y => y.Coordinate.YAxis);
+                ? _cells.Min(e => e.Coordinate.XAxis) - 1
+                : _cells.Min(y => y.Coordinate.YAxis) - 1;
 
             var yAxis = _cells.Max(y => y.Coordinate.YAxis) > _cells.Max(x => x.Coordinate.XAxis) 
-                ? _cells.Max(y => y.Coordinate.YAxis) 
-                : _cells.Max(x => x.Coordinate.XAxis);
+                ? _cells.Max(y => y.Coordinate.YAxis) + 1
+                : _cells.Max(x => x.Coordinate.XAxis) + 1;
 
             var returnCells = new List<Cell>();
 
@@ -111,8 +111,6 @@ namespace CodeKatas.GameOfLife
                 // don't add the cell
             }
 
-
-
             if (count == 2)
             {
                 if (_cells.Any(existing => existing.Equals(cell)))
@@ -125,8 +123,6 @@ namespace CodeKatas.GameOfLife
             {
                 return cell;
             }
-
-
 
             return null;
         }

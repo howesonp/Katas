@@ -22,7 +22,7 @@ namespace CodeKatas.Tests.Unit
         public void ReturnOneLiveCell_GivenGridWhichThreeVerticalLiveCells()
         {
             // | x|  |  | =>  |  |  |  |  |
-            // | x|  |  |     | x| x| x|  | x1 - y3
+            // | x|  |  |     | x| x| x|  | 
             // | x|  |  |     |  |  |  |  |
 
             var listOfCells = new List<Cell>
@@ -34,7 +34,7 @@ namespace CodeKatas.Tests.Unit
 
             var expectedReturnCells = new List<Cell>
             {
-                //new Cell(new Coordinate(2,0), CellState.Alive),
+                new Cell(new Coordinate(2,0), CellState.Alive),
                 new Cell(new Coordinate(2,1), CellState.Alive),
                 new Cell(new Coordinate(2,2), CellState.Alive)
             };
@@ -97,7 +97,7 @@ namespace CodeKatas.Tests.Unit
 
             var expectedReturnCells = new List<Cell>
             {
-                //new Cell(new Coordinate(0,2), CellState.Alive),
+                new Cell(new Coordinate(0,2), CellState.Alive),
                 new Cell(new Coordinate(1,1), CellState.Alive),
                 new Cell(new Coordinate(1,2), CellState.Alive),
                 new Cell(new Coordinate(1,3), CellState.Alive),
@@ -118,10 +118,10 @@ namespace CodeKatas.Tests.Unit
         [Test]
         public void ReturnGridWithThreeLiveCells_GivenGridWithFourLiveCells_AndOneWithFewerThanTwoNeighbours()
         {  
-            //                |  | x|  |
-            // | x| x| x| =>  |  | x| x|
-            // |  |  | x|     |  | x| x| x1 - y3
-            // |  |  | x|     |  |  |  |
+            //                |  | x|  |  |
+            // | x| x| x| =>  |  | x| x|  |
+            // |  |  | x|     |  |  | x| x|
+            // |  |  | x|     |  |  |  |  |
 
             var listOfCells = new List<Cell>
             {
@@ -134,11 +134,11 @@ namespace CodeKatas.Tests.Unit
 
             var expectedReturnCells = new List<Cell>
             {
-                //new Cell(new Coordinate(0,2), CellState.Alive),
+                new Cell(new Coordinate(0,2), CellState.Alive),
                 new Cell(new Coordinate(1,2), CellState.Alive),
                 new Cell(new Coordinate(1,3), CellState.Alive),
-                new Cell(new Coordinate(2,2), CellState.Alive),
                 new Cell(new Coordinate(2,3), CellState.Alive),
+                new Cell(new Coordinate(2,4), CellState.Alive),
             };
 
             var grid = new Grid(listOfCells);
@@ -153,10 +153,10 @@ namespace CodeKatas.Tests.Unit
         [Test]
         public void ReturnGridWithFourLiveCells_GivenGridWithNineLiveCells()
         { 
-            // | x | x |   | x |  =>  | X | X |   |   |
+            // | x | x |   | x |  =>  | x | x |   |   |
             // |   | x | x |   |      |   |   |   |   |
             // | x | x |   |   |      |   |   |   |   |
-            // | x | x |   |   |      | X | X |   |   |
+            // | x | x |   |   |      | x | x |   |   |
 
             var listOfCells = new List<Cell>
             {

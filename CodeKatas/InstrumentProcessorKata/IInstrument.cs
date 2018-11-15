@@ -1,6 +1,11 @@
-﻿namespace CodeKatas.InstrumentProcessorKata
+﻿using System;
+
+namespace CodeKatas.InstrumentProcessorKata
 {
     public interface IInstrument
     {
+        void Execute(string task);
+        event EventHandler Finished;
+        event EventHandler Error;
     }
 }

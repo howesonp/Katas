@@ -11,6 +11,18 @@ namespace CodeKatas.InstrumentProcessorKata
         {
             _taskDispatcher = taskDispatcher;
             _instrument = instrument;
+            _instrument.Error += OnError;
+            _instrument.Finished += OnFinished;
+        }
+
+        private void OnFinished(object sender, EventArgs e)
+        {
+            _taskDispatcher.FinishedTask(e.ToString());
+        }
+
+        private void OnError(object sender, EventArgs e)
+        {
+            Console.WriteLine($"Error with task {e}");
         }
 
         public void Process()

@@ -2,6 +2,7 @@
 {
     public interface ITaskDispatcher
     {
-        void GetTask();
+        string GetTask();
+        void FinishedTask(string task);
     }
 }

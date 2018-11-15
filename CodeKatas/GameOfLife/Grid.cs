@@ -6,6 +6,7 @@ namespace CodeKatas.GameOfLife
     public class Grid
     {
         private readonly List<Cell> _cells;
+        private readonly int _outerGridRing = 1;
 
         public Grid(List<Cell> inputCells)
         {
@@ -44,59 +45,34 @@ namespace CodeKatas.GameOfLife
         {
             var gridCellsToCheck = GetGridCellsToCheck();
 
-            //foreach (var cell in gridCellsToCheck)
-            //{
-            //    var newCell = CalculateCellStatusOnNewGrid(cell);
-            //}
-
-            var newCells = gridCellsToCheck
+            var newGridCells = gridCellsToCheck
                                 .Select(CalculateCellStatusOnNewGrid)
                                 .Where(newCell => newCell != null)
                                 .ToList();
 
-            return new Grid(newCells);
+            return new Grid(newGridCells);
         }
 
         private IEnumerable<Cell> GetGridCellsToCheck()
         {
-            var xAxis = GetXAxisStartPoint();
-
-            var yAxis = GetYAxisStartPoint();
+            var minGridPosition = GetMinGridPosition();
+            var maxGridPosition = GetMaxGridPosition();
 
             var returnCells = new List<Cell>();
 
-            for (var x = xAxis; x <= yAxis; x++)
+            for (var x = minGridPosition; x <= maxGridPosition; x++)
             {
-                var counter = yAxis;
+                var y = maxGridPosition;
 
-                while (counter >= xAxis)
+                while (y >= minGridPosition)
                 {
-                    returnCells.Add(new Cell(new Coordinate(x, counter)));
-                    counter--;
+                    returnCells.Add(new Cell(new Coordinate(x, y)));
+                    y--;
                 }
             }
 
             return returnCells;
         }
-
-        private int GetYAxisStartPoint()
-        {
-            var yAxis = _cells.Max(y => y.Coordinate.YAxis) > _cells.Max(x => x.Coordinate.XAxis)
-                ? _cells.Max(y => y.Coordinate.YAxis)
-                : _cells.Max(x => x.Coordinate.XAxis);
-
-            return yAxis + 1;
-        }
-
-        private int GetXAxisStartPoint()
-        {
-            var xAxis = _cells.Min(e => e.Coordinate.XAxis) < _cells.Min(y => y.Coordinate.YAxis)
-                ? _cells.Min(e => e.Coordinate.XAxis)
-                : _cells.Min(y => y.Coordinate.YAxis);
-
-            return xAxis - 1;
-        }
-
         private Cell CalculateCellStatusOnNewGrid(Cell cell)
         {
             // Any live cell with fewer than two live neighbours dies, as if by loneliness.
@@ -104,25 +80,14 @@ namespace CodeKatas.GameOfLife
             // Any live cell with two or three live neighbours lives, unchanged, to the next generation.
             // Any dead cell with exactly three live neighbours comes to life.
 
-            var neighbouringCells = cell.GetCellNeighours();
+            var numberOfLiveCellNeighbours = cell.GetNumberOfLiveCellNeighbours(_cells);
 
-            var count = NumberOfLiveNeighbours(neighbouringCells);
-
-            if (count < 2 || count > 3)
+            if (numberOfLiveCellNeighbours == 2 && CellIsAliveOnCurrentGrid(cell))
             {
-                // don't add the cell
+                return cell;
             }
 
-            if (count == 2)
-            {
-                // Only add the cell if it exists in current set - is alive.
-                if (_cells.Any(existing => existing.Equals(cell)))
-                {
-                    return cell;
-                }
-            }
-
-            if (count == 3)
+            if (numberOfLiveCellNeighbours == 3)
             {
                 return cell;
             }
@@ -130,16 +95,43 @@ namespace CodeKatas.GameOfLife
             return null;
         }
 
-        private int NumberOfLiveNeighbours(List<Cell> neighbouringCells)
+        private bool CellIsAliveOnCurrentGrid(Cell cell)
         {
-            var liveNeighbours = 0;
+            return _cells.Any(existing => existing.Equals(cell));
+        }
 
-            neighbouringCells.ForEach(neighbour =>
-            {
-                liveNeighbours += _cells.Count(cell => cell.Equals(neighbour));
-            });
+        private int GetMaxGridPosition()
+        {
+            var maxGridPosition = YAxisMax() > XAxisMax() ? YAxisMax() : XAxisMax();
 
-            return liveNeighbours;
+            return maxGridPosition + _outerGridRing;
+        }
+
+        private int GetMinGridPosition()
+        {
+            var minGridPosition = XAxisMin() < YAxisMin() ? XAxisMin() : YAxisMin();
+
+            return minGridPosition - _outerGridRing;
+        }
+
+        private int XAxisMin()
+        {
+            return _cells.Min(e => e.Coordinate.XAxis);
+        }
+
+        private int XAxisMax()
+        {
+            return _cells.Max(e => e.Coordinate.XAxis);
+        }
+
+        private int YAxisMin()
+        {
+            return _cells.Min(e => e.Coordinate.YAxis);
+        }
+
+        private int YAxisMax()
+        {
+            return _cells.Max(e => e.Coordinate.YAxis);
         }
     }
 }

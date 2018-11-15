@@ -19,7 +19,56 @@ namespace CodeKatas.Tests.Unit
         }
 
         [Test]
-        public void ReturnOneLiveCell_GivenGridWhichThreeVerticalLiveCells()
+        public void ReturnEmptyGrid_GivenGridWithOneLiveCell()
+        {
+            // | x|  |  | =>  |  |  |  |  
+            // |  |  |  |     |  |  |  |   
+            // |  |  |  |     |  |  |  |  
+
+            var listOfCells = new List<Cell>
+            {
+                new Cell(new Coordinate(1,1))
+            };
+
+            var grid = new Grid(listOfCells);
+            var game = new GameOfLifeGame(grid);
+            var expectedGrid = new Grid(new List<Cell>());
+
+            var returnGrid = game.Tick();
+
+            returnGrid.Should().Be(expectedGrid);
+        }
+
+        [Test]
+        public void ReturnGridWithOneCell_GivenGridWithThreeDiagonalLiveCells()
+        {
+            // | x|  |  | =>  |  |  |  |  
+            // |  | x|  |     |  | x|  |   
+            // |  |  | x|     |  |  |  |  
+
+            var listOfCells = new List<Cell>
+            {
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(3,3))
+            };
+
+            var expectedReturnCells = new List<Cell>
+            {
+                new Cell(new Coordinate(2,2))
+            }; 
+
+            var grid = new Grid(listOfCells);
+            var game = new GameOfLifeGame(grid);
+            var expectedGrid = new Grid(expectedReturnCells);
+
+            var returnGrid = game.Tick();
+
+            returnGrid.Should().Be(expectedGrid);
+        }
+
+        [Test]
+        public void ReturnThreeHorizontalLiveCells_GivenGridWhichThreeVerticalLiveCells_TwoLiveCellsDieTwoCellsSpawn()
         {
             // | x|  |  | =>  |  |  |  |  |
             // | x|  |  |     | x| x| x|  | 
@@ -49,7 +98,38 @@ namespace CodeKatas.Tests.Unit
         }
 
         [Test]
-        public void ReturnOneLiveCell_GivenGridWhichFourLiveCellsAndOnlyOneCellWithTwoAdjacentNeighbours()
+        public void ReturnFourLiveCells_GivenGridWhichHasThreeLiveCellsWhichShouldSurviveAndSpawnANewOne()
+        {
+            // |  |  |  | =>  |  |  |  |
+            // |  | x|x |     |  |x |x | x2 - y3
+            // |  | x|  |     |  |x |x |
+
+            var listOfCells = new List<Cell>
+            {
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,2))
+            };
+
+            var expectedReturnCells = new List<Cell>
+            {
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,2)),
+                new Cell(new Coordinate(3,3))
+            };
+
+            var grid = new Grid(listOfCells);
+            var game = new GameOfLifeGame(grid);
+            var expectedGrid = new Grid(expectedReturnCells);
+
+            var returnGrid = game.Tick();
+
+            returnGrid.Should().Be(expectedGrid);
+        }
+
+        [Test]
+        public void ReturnThreeLiveCells_GivenGridWhichFourLiveCells_ThreeLiveCellsDieAndTwoAreSpawned()
         {
             // |  |  | x| =>  |  |  |  |
             // |  | x|  |     |  | x| x| x1 - y3
@@ -80,11 +160,11 @@ namespace CodeKatas.Tests.Unit
         }
 
         [Test]
-        public void ReturnGridWithFourLiveCells_GivenGridWithFourLiveCells_AllWithBetweenTwoAndThreeNeighbours()
+        public void ReturnGridWithSevenLiveCells_GivenGridWithFourLiveCells_FourStayAliveAndThreeSpawn()
         {
             //                |  | x|  |  
             // | x| x| x| =>  | x| x| x|
-            // |  | x|  |     | x| x| x| x1 - y3
+            // |  | x|  |     | x| x| x| 
             // |  |  |  |     |  |  |  |
 
             var listOfCells = new List<Cell>
@@ -116,7 +196,7 @@ namespace CodeKatas.Tests.Unit
         }
 
         [Test]
-        public void ReturnGridWithThreeLiveCells_GivenGridWithFourLiveCells_AndOneWithFewerThanTwoNeighbours()
+        public void ReturnGridWithFiveLiveCells_GivenGridWithFiveLiveCells_WithTwoDyingAndTwoSpawning()
         {  
             //                |  | x|  |  |
             // | x| x| x| =>  |  | x| x|  |
@@ -177,38 +257,6 @@ namespace CodeKatas.Tests.Unit
                 new Cell(new Coordinate(1,2)),
                 new Cell(new Coordinate(4,1)),
                 new Cell(new Coordinate(4,2))
-            };
-
-            var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
-            var expectedGrid = new Grid(expectedReturnCells);
-
-            var returnGrid = game.Tick();
-
-            returnGrid.Should().Be(expectedGrid);
-        }
-
-
-        [Test]
-        public void ReturnFourLiveCells_GivenGridWhichHasThreeLiveCellsWhichShouldSurviveAndSpawnANewOne()
-        {
-            // |  |  |  | =>  |  |  |  |
-            // |  | x|x |     |  |x |x | x2 - y3
-            // |  | x|  |     |  |x |x |
-            
-            var listOfCells = new List<Cell>
-            {
-                new Cell(new Coordinate(2,2)),
-                new Cell(new Coordinate(2,3)),
-                new Cell(new Coordinate(3,2))
-            };
-
-            var expectedReturnCells = new List<Cell>
-            {
-                new Cell(new Coordinate(2,2)),
-                new Cell(new Coordinate(2,3)),
-                new Cell(new Coordinate(3,2)),
-                new Cell(new Coordinate(3,3))
             };
 
             var grid = new Grid(listOfCells);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeKatas.GameOfLife
 {
@@ -24,7 +25,7 @@ namespace CodeKatas.GameOfLife
             return Equals((Cell) obj);
         }
 
-        public List<Cell> GetCellNeighours()
+        private List<Cell> GetCellNeighours()
         {
             var adjacentCell = new AdjacentCells();
             var cellNeighbours = new List<Cell>();
@@ -44,6 +45,20 @@ namespace CodeKatas.GameOfLife
 
             var cellToMatch = new Cell(new Coordinate(xAxis, yAxis));
             return cellToMatch;
+        }
+
+        public int GetNumberOfLiveCellNeighbours(List<Cell> cells)
+        {
+            var liveNeighbours = 0;
+
+            var cellNeighbours = GetCellNeighours();
+
+            cellNeighbours.ForEach(neighbour =>
+            {
+                liveNeighbours += cells.Count(cell => cell.Equals(neighbour));
+            });
+
+            return liveNeighbours;
         }
     }
 }

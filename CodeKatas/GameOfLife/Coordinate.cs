@@ -5,10 +5,10 @@
         public int XAxis { get; internal set;  }
         public int YAxis { get; internal set;  }
 
-        public Coordinate(int xAxix, int yAxis)
+        public Coordinate(int xAxis, int yAxis)
         {
-            this.XAxis = xAxix;
-            this.YAxis = yAxis;
+            XAxis = xAxis;
+            YAxis = yAxis;
         }
 
         protected bool Equals(Coordinate other)

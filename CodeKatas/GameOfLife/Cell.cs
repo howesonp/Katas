@@ -46,19 +46,5 @@ namespace CodeKatas.GameOfLife
             var cellToMatch = new Cell(new Coordinate(xAxis, yAxis));
             return cellToMatch;
         }
-
-        public int GetNumberOfLiveCellNeighbours(List<Cell> cells)
-        {
-            var liveNeighbours = 0;
-
-            var cellNeighbours = GetCellNeighours();
-
-            cellNeighbours.ForEach(neighbour =>
-            {
-                liveNeighbours += cells.Count(cell => cell.Equals(neighbour));
-            });
-
-            return liveNeighbours;
-        }
     }
 }

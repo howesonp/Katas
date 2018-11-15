@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace CodeKatas.GameOfLife
+﻿namespace CodeKatas.GameOfLife
 {
     public class DeadCell : Cell
     {

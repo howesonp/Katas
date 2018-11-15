@@ -13,33 +13,6 @@ namespace CodeKatas.GameOfLife
             _cells = inputCells;
         }
 
-        protected bool Equals(Grid other)
-        {
-            var isEqual = true;
-
-            if (_cells.Count != other._cells.Count)
-            {
-                return false;
-            }
-
-            _cells.ForEach(cell =>
-            {
-                if (!other._cells.Any(cell.Equals))
-                {
-                    isEqual = false;
-                }
-            });
-
-            return isEqual;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Grid)obj);
-        }
 
         public Grid Regenerate()
         {
@@ -63,21 +36,27 @@ namespace CodeKatas.GameOfLife
             var minGridPosition = GetMinGridPosition();
             var maxGridPosition = GetMaxGridPosition();
 
+            return CreateNewGridCells(minGridPosition, maxGridPosition);
+        }
+
+        private IEnumerable<Cell> CreateNewGridCells(int minGridPosition, int maxGridPosition)
+        {
             var returnCells = new List<Cell>();
 
-            for (var x = minGridPosition; x <= maxGridPosition; x++)
+            for (var xAxis = minGridPosition; xAxis <= maxGridPosition; xAxis++)
             {
-                var y = maxGridPosition;
+                var yAxis = maxGridPosition;
 
-                while (y >= minGridPosition)
+                while (yAxis >= minGridPosition)
                 {
-                    returnCells.Add(new Cell(new Coordinate(x, y)));
-                    y--;
+                    returnCells.Add(new Cell(new Coordinate(xAxis, yAxis)));
+                    yAxis--;
                 }
             }
 
             return returnCells;
         }
+
         private Cell CalculateCellStatusOnNewGrid(Cell cell)
         {
             var deadCell = new DeadCell();
@@ -153,6 +132,34 @@ namespace CodeKatas.GameOfLife
         private int YAxisMax()
         {
             return _cells.Max(e => e.Coordinate.YAxis);
+        }
+
+        protected bool Equals(Grid other)
+        {
+            var isEqual = true;
+
+            if (_cells.Count != other._cells.Count)
+            {
+                return false;
+            }
+
+            _cells.ForEach(cell =>
+            {
+                if (!other._cells.Any(cell.Equals))
+                {
+                    isEqual = false;
+                }
+            });
+
+            return isEqual;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Grid)obj);
         }
     }
 }

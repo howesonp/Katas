@@ -35,13 +35,9 @@ namespace CodeKatas.GameOfLife
 
         public override bool Equals(object obj)
         {
-            var objType = obj.GetType();
-            var thisType = this.GetType();
-
-
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (objType != thisType) return false;
+            if (obj.GetType() != this.GetType()) return false;
             return Equals((Grid)obj);
         }
 
@@ -50,11 +46,16 @@ namespace CodeKatas.GameOfLife
             var gridCellsToCheck = GetGridCellsToCheck();
 
             var newGridCells = gridCellsToCheck
-                                .Select(CalculateCellStatusOnNewGrid)
-                                .Where(newCell => newCell != null)
-                                .ToList();
+                               .Select(CalculateCellStatusOnNewGrid)
+                               .Where(NewCellIsAlive)
+                               .ToList();
 
             return new Grid(newGridCells);
+        }
+
+        private static bool NewCellIsAlive(Cell cell)
+        {
+            return cell.GetType() != typeof(DeadCell);
         }
 
         private IEnumerable<Cell> GetGridCellsToCheck()
@@ -79,12 +80,16 @@ namespace CodeKatas.GameOfLife
         }
         private Cell CalculateCellStatusOnNewGrid(Cell cell)
         {
-            // Any live cell with fewer than two live neighbours dies, as if by loneliness.
-            // Any live cell with more than three live neighbours dies, as if by overcrowding.
-            // Any live cell with two or three live neighbours lives, unchanged, to the next generation.
-            // Any dead cell with exactly three live neighbours comes to life.
+            var deadCell = new DeadCell();
 
-            var numberOfLiveCellNeighbours = cell.GetNumberOfLiveCellNeighbours(_cells);
+            var cellNeighbours = cell.GetCellNeighours();
+
+            var numberOfLiveCellNeighbours = GetNumberOfLiveCellNeighbours(cellNeighbours);
+
+            if (numberOfLiveCellNeighbours < 2 || numberOfLiveCellNeighbours > 3)
+            {
+                return deadCell;
+            }
 
             if (numberOfLiveCellNeighbours == 2 && CellIsAliveOnCurrentGrid(cell))
             {
@@ -96,7 +101,19 @@ namespace CodeKatas.GameOfLife
                 return cell;
             }
 
-            return null;
+            return deadCell;
+        }
+
+        public int GetNumberOfLiveCellNeighbours(List<Cell> cellNeighbours)
+        {
+            var liveNeighbours = 0;
+
+            cellNeighbours.ForEach(neighbour =>
+            {
+                liveNeighbours += _cells.Count(cell => cell.Equals(neighbour));
+            });
+
+            return liveNeighbours;
         }
 
         private bool CellIsAliveOnCurrentGrid(Cell cell)

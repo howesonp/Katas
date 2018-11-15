@@ -25,7 +25,7 @@ namespace CodeKatas.GameOfLife
             return Equals((Cell) obj);
         }
 
-        private List<Cell> GetCellNeighours()
+        public List<Cell> GetCellNeighours()
         {
             var adjacentCell = new AdjacentCells();
             var cellNeighbours = new List<Cell>();

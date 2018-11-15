@@ -13,7 +13,9 @@ namespace CodeKatas
 
         public Grid Tick()
         {
-            return grid.Equals(new EmptyGrid()) ? grid : grid.Regenerate();
+            return grid.Equals(new EmptyGrid()) 
+                ? grid 
+                : grid = grid.Regenerate();
         }    
     }
 }

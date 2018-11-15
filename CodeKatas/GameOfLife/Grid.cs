@@ -35,9 +35,13 @@ namespace CodeKatas.GameOfLife
 
         public override bool Equals(object obj)
         {
+            var objType = obj.GetType();
+            var thisType = this.GetType();
+
+
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (objType != thisType) return false;
             return Equals((Grid)obj);
         }
 

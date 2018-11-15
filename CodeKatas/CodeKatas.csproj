@@ -50,6 +50,10 @@
     <Compile Include="GameOfLife\EmptyGrid.cs" />
     <Compile Include="GameOfLifeGame.cs" />
     <Compile Include="GameOfLife\Grid.cs" />
+    <Compile Include="InstrumentProcessorKata\IInstrument.cs" />
+    <Compile Include="InstrumentProcessorKata\IInstrumentProcessor.cs" />
+    <Compile Include="InstrumentProcessorKata\InstrumentProcessor.cs" />
+    <Compile Include="InstrumentProcessorKata\ITaskDispatcher.cs" />
     <Compile Include="StringCalculatorExtensions.cs" />
     <Compile Include="BowlingGame\BowlingGameExtensions.cs" />
     <Compile Include="CalculationExtensions.cs" />

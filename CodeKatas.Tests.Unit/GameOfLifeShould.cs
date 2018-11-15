@@ -267,5 +267,58 @@ namespace CodeKatas.Tests.Unit
 
             returnGrid.Should().Be(expectedGrid);
         }
+
+        [Test]
+        public void ReturnCorrectGrids_GivenGridWithFiveLiveCells_AndWhenTickingTwice()
+        {
+            //                                   
+            //                |  | x|  |  |      |  | x| x|  |
+            // | x| x| x| =>  |  | x| x|  | =>   |  | x|  | x|
+            // |  |  | x|     |  |  | x| x|      |  | x| x| x|
+            // |  |  | x|     |  |  |  |  |      |  |  |  |  |
+
+            var listOfCells = new List<Cell>
+            {
+                new Cell(new Coordinate(1,1)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(3,3))
+            };
+
+            var expectedReturnCellsForTickOne = new List<Cell>
+            {
+                new Cell(new Coordinate(0,2)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,3)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(2,4))
+            };
+
+            var expectedReturnCellsForTickTwo = new List<Cell>
+            {
+                new Cell(new Coordinate(0,2)),
+                new Cell(new Coordinate(0,3)),
+                new Cell(new Coordinate(1,2)),
+                new Cell(new Coordinate(1,4)),
+                new Cell(new Coordinate(2,2)),
+                new Cell(new Coordinate(2,3)),
+                new Cell(new Coordinate(2,4))
+            };
+
+            var grid = new Grid(listOfCells);
+            var game = new GameOfLifeGame(grid);
+            var expectedGridOne = new Grid(expectedReturnCellsForTickOne);
+            var expectedGridTwo = new Grid(expectedReturnCellsForTickTwo);
+
+            var returnGrid = game.Tick();
+
+            returnGrid.Should().Be(expectedGridOne);
+
+            var returnGridTwo = game.Tick();
+
+            returnGridTwo.Should().Be(expectedGridTwo);
+        }
+
     }
 }

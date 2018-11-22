@@ -5,7 +5,7 @@ namespace CodeKatas.InstrumentProcessorKata
     public interface IInstrument
     {
         void Execute(string task);
-        event EventHandler Finished;
-        event EventHandler Error;
+        event EventHandler<InstrumentProcessEventArgs> Finished;
+        event EventHandler<InstrumentProcessEventArgs> Error;
     }
 }

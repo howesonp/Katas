@@ -40,15 +40,43 @@ namespace CodeKatas.Tests.Unit
         public void ReturnTaskFinished_WhenProcessing_ASuccessfulTask()
         {
             var taskDispatcher = Substitute.For<ITaskDispatcher>();
-            taskDispatcher.GetTask().Returns((string)null);
+            taskDispatcher.GetTask().Returns("Success");
             var instrument = Substitute.For<IInstrument>();
-            instrument.Execute("Success");
-            instrument.Finished += Raise.EventWith(new EventArgs());
+            instrument.When(i => i.Execute("Success")).Do(i => instrument.Finished += Raise.EventWith(new InstrumentProcessEventArgs("Success")));
             var instrumentProcessor = new InstrumentProcessor(taskDispatcher, instrument);
 
             instrumentProcessor.Process();
 
-            taskDispatcher.Received(1).FinishedTask("Success");
+            instrument.Received(1).Execute("Success");
+        }
+
+        [Test]
+        public void RaiseErrorEvent_WhenProcessing_AnTaskWhichShouldError()
+        {
+            var taskDispatcher = Substitute.For<ITaskDispatcher>();
+            taskDispatcher.GetTask().Returns("ShouldError");
+            var instrument = Substitute.For<IInstrument>();
+            instrument.When(i => i.Execute("ShouldError")).Do(i => instrument.Error += Raise.EventWith(new InstrumentProcessEventArgs("ShouldError")));
+            var instrumentProcessor = new InstrumentProcessor(taskDispatcher, instrument);
+
+            instrumentProcessor.Process();
+
+            instrument.Received(1).Execute("ShouldError");
+        }
+
+        [Test]
+        public void CallTaskDispatcher_WithCorrectTaskName_WhenSuccessfullyFinishingATask()
+        {
+            var taskDispatcher = Substitute.For<ITaskDispatcher>();
+            taskDispatcher.GetTask().Returns("GoodTask");
+            var instrument = Substitute.For<IInstrument>();
+            instrument.When(i => i.Execute("GoodTask")).Do(i => instrument.Finished += Raise.EventWith(new InstrumentProcessEventArgs("GoodTask")));
+            var instrumentProcessor = new InstrumentProcessor(taskDispatcher, instrument);
+
+            instrumentProcessor.Process();
+
+            instrument.Received(1).Execute("GoodTask");
+            taskDispatcher.Received(1).FinishedTask("GoodTask");
         }
     }
 }

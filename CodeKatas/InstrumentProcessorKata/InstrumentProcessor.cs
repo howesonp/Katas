@@ -15,19 +15,20 @@ namespace CodeKatas.InstrumentProcessorKata
             _instrument.Finished += OnFinished;
         }
 
-        private void OnFinished(object sender, EventArgs e)
+        private void OnFinished(object sender, InstrumentProcessEventArgs e)
         {
-            _taskDispatcher.FinishedTask(e.ToString());
+            _taskDispatcher.FinishedTask(e.InstrumentProcessTask);
         }
 
-        private void OnError(object sender, EventArgs e)
+        private void OnError(object sender, InstrumentProcessEventArgs e)
         {
-            Console.WriteLine($"Error with task {e}");
+            Console.WriteLine("Error occured");
         }
 
         public void Process()
         {
-            _taskDispatcher.GetTask();
+            var task = _taskDispatcher.GetTask();
+            _instrument.Execute(task);
         }
     }
 }

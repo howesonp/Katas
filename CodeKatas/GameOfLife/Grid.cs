@@ -13,7 +13,6 @@ namespace CodeKatas.GameOfLife
             _cells = inputCells;
         }
 
-
         public Grid Regenerate()
         {
             var gridCellsToCheck = GetGridCellsToCheck();
@@ -28,26 +27,26 @@ namespace CodeKatas.GameOfLife
 
         private static bool NewCellIsAlive(Cell cell)
         {
-            return cell.GetType() != typeof(DeadCell);
+            return cell != null;
         }
 
         private IEnumerable<Cell> GetGridCellsToCheck()
         {
-            var minGridPosition = GetMinGridPosition();
-            var maxGridPosition = GetMaxGridPosition();
+            var minGridCoordinate = GetMinGridCoordinate();
+            var maxGridCoordinate = GetMaxGridCoordinate();
 
-            return CreateNewGridCells(minGridPosition, maxGridPosition);
+            return CreateNewGridCells(minGridCoordinate, maxGridCoordinate);
         }
 
-        private IEnumerable<Cell> CreateNewGridCells(int minGridPosition, int maxGridPosition)
+        private IEnumerable<Cell> CreateNewGridCells(Coordinate minCoordinate, Coordinate maxCoordinate)
         {
             var returnCells = new List<Cell>();
 
-            for (var xAxis = minGridPosition; xAxis <= maxGridPosition; xAxis++)
+            for (var xAxis = minCoordinate.XAxis; xAxis <= maxCoordinate.YAxis; xAxis++)
             {
-                var yAxis = maxGridPosition;
+                var yAxis = maxCoordinate.YAxis;
 
-                while (yAxis >= minGridPosition)
+                while (yAxis >= minCoordinate.XAxis)
                 {
                     returnCells.Add(new Cell(new Coordinate(xAxis, yAxis)));
                     yAxis--;
@@ -59,28 +58,41 @@ namespace CodeKatas.GameOfLife
 
         private Cell CalculateCellStatusOnNewGrid(Cell cell)
         {
-            var deadCell = new DeadCell();
-
             var cellNeighbours = cell.GetCellNeighours();
 
             var numberOfLiveCellNeighbours = GetNumberOfLiveCellNeighbours(cellNeighbours);
 
-            if (numberOfLiveCellNeighbours < 2 || numberOfLiveCellNeighbours > 3)
+            if (CellShouldNotLive(numberOfLiveCellNeighbours))
             {
-                return deadCell;
+                return null;
             }
 
-            if (numberOfLiveCellNeighbours == 2 && CellIsAliveOnCurrentGrid(cell))
-            {
-                return cell;
-            }
-
-            if (numberOfLiveCellNeighbours == 3)
+            if (CellShouldRemainAlive(cell, numberOfLiveCellNeighbours))
             {
                 return cell;
             }
 
-            return deadCell;
+            if (CellShouldSpawn(numberOfLiveCellNeighbours))
+            {
+                return cell;
+            }
+
+            return null;
+        }
+
+        private static bool CellShouldSpawn(int numberOfLiveCellNeighbours)
+        {
+            return numberOfLiveCellNeighbours == 3;
+        }
+
+        private bool CellShouldRemainAlive(Cell cell, int numberOfLiveCellNeighbours)
+        {
+            return numberOfLiveCellNeighbours == 2 && CellIsAliveOnCurrentGrid(cell);
+        }
+
+        private static bool CellShouldNotLive(int numberOfLiveCellNeighbours)
+        {
+            return numberOfLiveCellNeighbours < 2 || numberOfLiveCellNeighbours > 3;
         }
 
         public int GetNumberOfLiveCellNeighbours(List<Cell> cellNeighbours)
@@ -100,18 +112,18 @@ namespace CodeKatas.GameOfLife
             return _cells.Any(existing => existing.Equals(cell));
         }
 
-        private int GetMaxGridPosition()
+        private Coordinate GetMaxGridCoordinate()
         {
             var maxGridPosition = YAxisMax() > XAxisMax() ? YAxisMax() : XAxisMax();
 
-            return maxGridPosition + _outerGridRing;
+            return new Coordinate(maxGridPosition + _outerGridRing, maxGridPosition + _outerGridRing);
         }
 
-        private int GetMinGridPosition()
+        private Coordinate GetMinGridCoordinate()
         {
             var minGridPosition = XAxisMin() < YAxisMin() ? XAxisMin() : YAxisMin();
 
-            return minGridPosition - _outerGridRing;
+            return new Coordinate(minGridPosition - _outerGridRing, minGridPosition - _outerGridRing);
         }
 
         private int XAxisMin()

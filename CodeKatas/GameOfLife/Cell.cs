@@ -7,6 +7,8 @@ namespace CodeKatas.GameOfLife
     {
         public Coordinate Coordinate;
 
+
+
         public Cell(Coordinate coordinate)
         {
             Coordinate = coordinate;

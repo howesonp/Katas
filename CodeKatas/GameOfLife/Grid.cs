@@ -37,21 +37,20 @@ namespace CodeKatas.GameOfLife
 
         private IEnumerable<Cell> GetGridCellsToCheck()
         {
-            var minGridCoordinate = GetMinGridCoordinate();
-            var maxGridCoordinate = GetMaxGridCoordinate();
+            var gridCoordinates = new Coordinate(GetMinGridPoint(), GetMaxGridPoint());
 
-            return CreateNewGridCells(minGridCoordinate, maxGridCoordinate);
+            return CreateNewGridCells(gridCoordinates);
         }
 
-        private IEnumerable<Cell> CreateNewGridCells(Coordinate minCoordinate, Coordinate maxCoordinate)
+        private IEnumerable<Cell> CreateNewGridCells(Coordinate coordinates)
         {
             var returnCells = new List<Cell>();
 
-            for (var xAxis = minCoordinate.XAxis; xAxis <= maxCoordinate.YAxis; xAxis++)
+            for (var xAxis = coordinates.XAxis; xAxis <= coordinates.YAxis; xAxis++)
             {
-                var yAxis = maxCoordinate.YAxis;
+                var yAxis = coordinates.YAxis;
 
-                while (yAxis >= minCoordinate.XAxis)
+                while (yAxis >= coordinates.XAxis)
                 {
                     returnCells.Add(new Cell(new Coordinate(xAxis, yAxis)));
                     yAxis--;
@@ -103,18 +102,18 @@ namespace CodeKatas.GameOfLife
             return _cells.Any(existing => existing.Equals(cell));
         }
 
-        private Coordinate GetMaxGridCoordinate()
+        private int GetMaxGridPoint()
         { 
             var maxGridPosition = YAxisMax() > XAxisMax() ? YAxisMax() : XAxisMax();
 
-            return new Coordinate(maxGridPosition + _outerGridRing, maxGridPosition + _outerGridRing);
+            return maxGridPosition + _outerGridRing;
         }
 
-        private Coordinate GetMinGridCoordinate()
+        private int GetMinGridPoint()
         {
             var minGridPosition = XAxisMin() < YAxisMin() ? XAxisMin() : YAxisMin();
 
-            return new Coordinate(minGridPosition - _outerGridRing, minGridPosition - _outerGridRing);
+            return minGridPosition - _outerGridRing;
         }
 
         private int XAxisMin()

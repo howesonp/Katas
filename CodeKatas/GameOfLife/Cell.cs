@@ -48,5 +48,55 @@ namespace CodeKatas.GameOfLife
             var cellToMatch = new Cell(new Coordinate(xAxis, yAxis));
             return cellToMatch;
         }
+
+
+        public bool ShouldSpawn(int numberOfLiveCellNeighbours)
+        {
+            return numberOfLiveCellNeighbours == 3;
+        }
+
+        public bool ShouldRemainAlive(int numberOfLiveCellNeighbours)
+        {
+            return numberOfLiveCellNeighbours == 2;
+        }
+
+        public bool ShouldNotLive(int numberOfLiveCellNeighbours)
+        {
+            return numberOfLiveCellNeighbours < 2 || numberOfLiveCellNeighbours > 3;
+        }
+
+        //private Coordinate GetMaxGridCoordinate(List<Cell> cells)
+        //{
+        //    var maxGridPosition = YAxisMax(cells) > XAxisMax(cells) ? YAxisMax(cells) : XAxisMax(cells);
+
+        //    return new Coordinate(maxGridPosition + 1, maxGridPosition + 1);
+        //}
+
+        //private Coordinate GetMinGridCoordinate(List<Cell> cells)
+        //{
+        //    var minGridPosition = XAxisMin(cells) < YAxisMin(cells) ? XAxisMin(cells) : YAxisMin(cells);
+
+        //    return new Coordinate(minGridPosition - 1, minGridPosition - 1);
+        //}
+
+        //private int XAxisMin(List<Cell> cells)
+        //{
+        //    return cells.Min(e => e.Coordinate.XAxis);
+        //}
+
+        //private int XAxisMax(List<Cell> cells)
+        //{
+        //    return cells.Max(e => e.Coordinate.XAxis);
+        //}
+
+        //private int YAxisMin(List<Cell> cells)
+        //{
+        //    return cells.Min(e => e.Coordinate.YAxis);
+        //}
+
+        //private int YAxisMax(List<Cell> cells)
+        //{
+        //    return cells.Max(e => e.Coordinate.YAxis);
+        //}
     }
 }

@@ -12,8 +12,7 @@ namespace CodeKatas.Tests.Unit
         public void ReturnEmptyGrid_GivenInitialEmptyGrid()
         {
             var grid = new EmptyGrid();
-            var game = new GameOfLifeGame(grid);
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(new EmptyGrid());
         }
@@ -31,10 +30,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(new List<Cell>());
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -59,10 +57,9 @@ namespace CodeKatas.Tests.Unit
             }; 
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -89,10 +86,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -120,10 +116,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -151,10 +146,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -187,10 +181,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -222,10 +215,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -260,10 +252,9 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGrid = new Grid(expectedReturnCells);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGrid);
         }
@@ -307,18 +298,16 @@ namespace CodeKatas.Tests.Unit
             };
 
             var grid = new Grid(listOfCells);
-            var game = new GameOfLifeGame(grid);
             var expectedGridOne = new Grid(expectedReturnCellsForTickOne);
             var expectedGridTwo = new Grid(expectedReturnCellsForTickTwo);
 
-            var returnGrid = game.Tick();
+            var returnGrid = grid.Tick();
 
             returnGrid.Should().Be(expectedGridOne);
 
-            var returnGridTwo = game.Tick();
+            var returnGridTwo = grid.Tick();
 
             returnGridTwo.Should().Be(expectedGridTwo);
         }
-
     }
 }

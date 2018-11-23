@@ -48,7 +48,6 @@
     <Compile Include="GameOfLife\AdjacentCells.cs" />
     <Compile Include="GameOfLife\Cell.cs" />
     <Compile Include="GameOfLife\EmptyGrid.cs" />
-    <Compile Include="GameOfLifeGame.cs" />
     <Compile Include="GameOfLife\Grid.cs" />
     <Compile Include="InstrumentProcessorKata\IInstrument.cs" />
     <Compile Include="InstrumentProcessorKata\IInstrumentProcessor.cs" />

@@ -5,7 +5,7 @@ namespace CodeKatas.GameOfLife
 {
     public class Grid
     {
-        private readonly List<Cell> _cells;
+        private List<Cell> _cells;
         private readonly int _outerGridRing = 1;
 
         public Grid(List<Cell> inputCells)
@@ -13,16 +13,21 @@ namespace CodeKatas.GameOfLife
             _cells = inputCells;
         }
 
-        public Grid Regenerate()
+        public Grid Tick()
         {
+            if (!_cells.Any())
+            {
+                return new EmptyGrid();
+            }
+
             var gridCellsToCheck = GetGridCellsToCheck();
 
-            var newGridCells = gridCellsToCheck
+            _cells = gridCellsToCheck
                                .Select(CalculateCellStatusOnNewGrid)
                                .Where(NewCellIsAlive)
                                .ToList();
 
-            return new Grid(newGridCells);
+            return new Grid(_cells);
         }
 
         private static bool NewCellIsAlive(Cell cell)
@@ -62,17 +67,17 @@ namespace CodeKatas.GameOfLife
 
             var numberOfLiveCellNeighbours = GetNumberOfLiveCellNeighbours(cellNeighbours);
 
-            if (CellShouldNotLive(numberOfLiveCellNeighbours))
+            if (cell.ShouldNotLive(numberOfLiveCellNeighbours))
             {
                 return null;
             }
 
-            if (CellShouldRemainAlive(cell, numberOfLiveCellNeighbours))
+            if (cell.ShouldRemainAlive(numberOfLiveCellNeighbours) && CellIsAliveOnCurrentGrid(cell))
             {
                 return cell;
             }
 
-            if (CellShouldSpawn(numberOfLiveCellNeighbours))
+            if (cell.ShouldSpawn(numberOfLiveCellNeighbours))
             {
                 return cell;
             }
@@ -80,20 +85,6 @@ namespace CodeKatas.GameOfLife
             return null;
         }
 
-        private static bool CellShouldSpawn(int numberOfLiveCellNeighbours)
-        {
-            return numberOfLiveCellNeighbours == 3;
-        }
-
-        private bool CellShouldRemainAlive(Cell cell, int numberOfLiveCellNeighbours)
-        {
-            return numberOfLiveCellNeighbours == 2 && CellIsAliveOnCurrentGrid(cell);
-        }
-
-        private static bool CellShouldNotLive(int numberOfLiveCellNeighbours)
-        {
-            return numberOfLiveCellNeighbours < 2 || numberOfLiveCellNeighbours > 3;
-        }
 
         public int GetNumberOfLiveCellNeighbours(List<Cell> cellNeighbours)
         {
@@ -113,7 +104,7 @@ namespace CodeKatas.GameOfLife
         }
 
         private Coordinate GetMaxGridCoordinate()
-        {
+        { 
             var maxGridPosition = YAxisMax() > XAxisMax() ? YAxisMax() : XAxisMax();
 
             return new Coordinate(maxGridPosition + _outerGridRing, maxGridPosition + _outerGridRing);

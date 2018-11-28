@@ -29,10 +29,10 @@ namespace CodeKatas.GameOfLife
 
         private List<Cell> GetNextGridLiveCells()
         {
-            return GetNextGridUnfiltered().Where(cell => cell.IsAlive()).ToList();
+            return GetNextGridLiveAndDead().Where(cell => cell.IsAlive()).ToList();
         }
 
-        public List<Cell> GetNextGridUnfiltered()
+        public List<Cell> GetNextGridLiveAndDead()
         {
             var gridCellsToCheck = GetGridCellsToCheck();
 
@@ -176,52 +176,6 @@ namespace CodeKatas.GameOfLife
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((Grid)obj);
-        }
-
-        public string GridAsHtmlTable()
-        {
-            var sb = new StringBuilder();
-            sb.Append("<TABLE border=1>\n");
-            var orderedCells = GetNextGridUnfiltered().OrderBy(e => e.XAxis).ThenBy(y => y.YAxis);
-            bool firstIteration = true;
-            int previousXAxis = 0;
-
-            foreach (var cell in orderedCells)
-            {
-                if (firstIteration)
-                {
-                    //sb.Append("<TR>\n");
-
-                    CreateHtmlCell(sb, cell, "firstIteration");
-                    firstIteration = false;
-
-                    //sb.Append("</TR>\n");
-                }
-                else if (cell.XAxis == previousXAxis)
-                {
-                    CreateHtmlCell(sb, cell, "cellSameAxis");
-                }
-                else if(cell.XAxis != previousXAxis)
-                {
-                    sb.Append("</TR>\n"); // close previous row
-                    sb.Append("<TR>\n"); // start new row
-                    CreateHtmlCell(sb, cell, "new row");   
-                }
-
-                previousXAxis = cell.XAxis;
-            }
-            sb.Append("</TABLE>");
-
-            return sb.ToString();
-        }
-
-        private static void CreateHtmlCell(StringBuilder sb, Cell cell, string message)
-        {
-            sb.Append("<TD width=25px; height=25px>");
-            sb.Append(cell.IsAlive()
-                ? $"Alive"
-                : $"     ");
-            sb.Append("</TD>");
         }
     }
 }

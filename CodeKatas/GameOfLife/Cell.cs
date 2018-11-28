@@ -1,23 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CodeKatas.GameOfLife
 {
     public class Cell
     {
-        public Coordinate Coordinate;
-
-        public readonly int XAxis;
-        public readonly int YAxis;
-
-        public Cell(Coordinate coordinate)
+        private readonly CellState _cellState;
+        public int XAxis { get; }
+        public int YAxis { get; }
+ 
+        public Cell(int xAxis, int yAxis, CellState cellState = CellState.Dead)
         {
-            Coordinate = coordinate;
+            _cellState = cellState;
+            XAxis = xAxis;
+            YAxis = yAxis;
         }
 
         protected bool Equals(Cell other)
         {
-            return Coordinate.Equals(other.Coordinate);
+            return XAxis == other.XAxis && YAxis == other.YAxis;
         }
 
         public override bool Equals(object obj)
@@ -43,13 +44,12 @@ namespace CodeKatas.GameOfLife
 
         private static Cell GetCellNeighbour(Cell cell, Coordinate neighbour)
         {
-            var xAxis = cell.Coordinate.XAxis + neighbour.XAxis;
-            var yAxis = cell.Coordinate.YAxis + neighbour.YAxis;
+            var xAxis = cell.XAxis + neighbour.XAxis;
+            var yAxis = cell.YAxis + neighbour.YAxis;
 
-            var cellToMatch = new Cell(new Coordinate(xAxis, yAxis));
+            var cellToMatch = new Cell(xAxis, yAxis);
             return cellToMatch;
         }
-
 
         public bool ShouldSpawn(int numberOfLiveCellNeighbours)
         {
@@ -66,38 +66,9 @@ namespace CodeKatas.GameOfLife
             return numberOfLiveCellNeighbours < 2 || numberOfLiveCellNeighbours > 3;
         }
 
-        //private Coordinate GetMaxGridCoordinate(List<Cell> cells)
-        //{
-        //    var maxGridPosition = YAxisMax(cells) > XAxisMax(cells) ? YAxisMax(cells) : XAxisMax(cells);
-
-        //    return new Coordinate(maxGridPosition + 1, maxGridPosition + 1);
-        //}
-
-        //private Coordinate GetMinGridCoordinate(List<Cell> cells)
-        //{
-        //    var minGridPosition = XAxisMin(cells) < YAxisMin(cells) ? XAxisMin(cells) : YAxisMin(cells);
-
-        //    return new Coordinate(minGridPosition - 1, minGridPosition - 1);
-        //}
-
-        //private int XAxisMin(List<Cell> cells)
-        //{
-        //    return cells.Min(e => e.Coordinate.XAxis);
-        //}
-
-        //private int XAxisMax(List<Cell> cells)
-        //{
-        //    return cells.Max(e => e.Coordinate.XAxis);
-        //}
-
-        //private int YAxisMin(List<Cell> cells)
-        //{
-        //    return cells.Min(e => e.Coordinate.YAxis);
-        //}
-
-        //private int YAxisMax(List<Cell> cells)
-        //{
-        //    return cells.Max(e => e.Coordinate.YAxis);
-        //}
+        public bool IsAlive()
+        {
+            return _cellState == CellState.Alive;
+        }
     }
 }

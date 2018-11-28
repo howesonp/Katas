@@ -1,0 +1,47 @@
+﻿@page "/fetchdata"
+@using Microsoft.AspNetCore.Html
+@inject HttpClient Http
+@inject CodeKatas.GameOfLife.Grid Grid;
+
+<h1>Game of life</h1>
+
+
+@if (_currentGrid == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        @(gridToHtml)
+    </div>
+    <button class="btn btn-primary" onclick="@Tick">Grid regenerate</button>
+}
+
+@functions {
+
+    Grid _currentGrid;
+    MarkupString gridToHtml;
+    protected override async Task OnInitAsync()
+    {
+        var initialListOfCells = new List<Cell>
+        {
+            new Cell(1, 1, CellState.Alive),
+            new Cell(1, 2, CellState.Alive),
+            new Cell(1, 3, CellState.Alive),
+            new Cell(2, 1, CellState.Alive),
+            new Cell(2, 2, CellState.Alive),
+            new Cell(3, 2, CellState.Alive),
+            new Cell(3, 3, CellState.Alive)
+        };
+
+        _currentGrid = new Grid(initialListOfCells);
+        gridToHtml = new MarkupString(_currentGrid.GridAsHtmlTable());
+    }
+
+    void Tick()
+    {
+        _currentGrid.Tick();
+        gridToHtml = new MarkupString(_currentGrid.GridAsHtmlTable());
+    }
+}

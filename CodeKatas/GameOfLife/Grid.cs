@@ -7,7 +7,6 @@ namespace CodeKatas.GameOfLife
     public class Grid
     {
         private List<Cell> _cells;
-        private List<Cell> _liveAndDeadCells;
         private readonly int _outerGridRing = 1;
 
         public Grid(List<Cell> inputCells)
@@ -37,7 +36,7 @@ namespace CodeKatas.GameOfLife
             var gridCellsToCheck = GetGridCellsToCheck();
 
             return gridCellsToCheck.Select(CalculateCellStatusOnNewGrid)
-                .ToList();
+                                   .ToList();
         }
 
         private IEnumerable<Cell> GetGridCellsToCheck()
@@ -57,7 +56,7 @@ namespace CodeKatas.GameOfLife
 
                 while (yAxis >= coordinates.XAxis)
                 {
-                    returnCells.Add(new Cell(xAxis, yAxis, CellState.Dead));
+                    returnCells.Add(new Cell(xAxis, yAxis));
                     yAxis--;
                 }
             }

@@ -1,6 +1,5 @@
 ﻿@page "/gameOfLife"
 @using System.Text
-@using System.Threading
 @inject HttpClient Http
 @inject Grid Grid;
 
@@ -13,130 +12,130 @@
 else
 {
     <div>
-        @(gridToHtml)
-    </div>
-    <div>
-        <div class="btn-group">
+        <div class="btn-group" style="padding-bottom: 30px">
             <div>
-                <button class="btn btn-primary" onclick="@Tick">Tick</button>
+                <div class="btn btn-primary" onclick="@Tick">Tick</div>
             </div>
-            <div class="btn-group">
-                <div class="dropdown">
-                    <select class="dropdown-menu" id="select-box" bind="@selectedIteration">
+            <div>
+                <div class="btn btn-primary" onclick="@TickMultiple">Regenerate Multiple</div>
+            </div>
 
-                        @foreach (var iteration in _iterations)
-                        {
-                            <option class="dropdown-item" value="@iteration">@iteration</option>
-                        }
-                    </select>
-                </div>
-                <button class="btn btn-primary" onclick="@TickMultiple">Regenerate Multiple</button>
+            <div class="dropdown">
+                <select id="select-box" bind="@_selectedIteration">
+                    @foreach (var iteration in _iterations)
+                    {
+                        <option value="@iteration">@iteration</option>
+                    }
+                </select>
             </div>
         </div>
+    </div>
+
+    <div bind="@GridToHtml">
+        @(GridToHtml)
     </div>
 }
 
 @functions {
 
-    Grid _currentGrid;
-    MarkupString gridToHtml;
+Grid _currentGrid;
+public MarkupString GridToHtml { get; set; }
 
-    protected override async Task OnInitAsync()
+protected override async Task OnInitAsync()
+{
+    var initialListOfCells = new List<Cell>
+{
+    new Cell(1, 1, CellState.Alive),
+    new Cell(1, 2, CellState.Alive),
+    new Cell(1, 3, CellState.Alive),
+    new Cell(2, 1, CellState.Alive),
+    new Cell(2, 2, CellState.Alive),
+    new Cell(3, 2, CellState.Alive),
+    new Cell(3, 3, CellState.Alive)
+};
+
+    _currentGrid = new Grid(initialListOfCells);
+    GridToHtml = new MarkupString(GridAsHtmlTable());
+}
+
+private int _selectedIteration;
+
+private readonly List<int> _iterations = new List<int>
+{
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+};
+
+void Tick()
+{
+    _currentGrid.Tick();
+    GridToHtml = new MarkupString(GridAsHtmlTable());
+}
+
+void TickMultiple()
+{
+    for (int i = 0; i < _selectedIteration; i++)
     {
-        var initialListOfCells = new List<Cell>
-        {
-            new Cell(1, 1, CellState.Alive),
-            new Cell(1, 2, CellState.Alive),
-            new Cell(1, 3, CellState.Alive),
-            new Cell(2, 1, CellState.Alive),
-            new Cell(2, 2, CellState.Alive),
-            new Cell(3, 2, CellState.Alive),
-            new Cell(3, 3, CellState.Alive)
-        };
+        Tick();
+    }
+}
 
-        _currentGrid = new Grid(initialListOfCells);
-        gridToHtml = new MarkupString(GridAsHtmlTable());
+private string GridAsHtmlTable()
+{
+    var sb = new StringBuilder();
+    sb.Append("<TABLE border=1>\n");
+    var orderedCells = _currentGrid.GetNextGridLiveAndDead().OrderBy(e => e.XAxis);
+
+    var previousXAxis = 0;
+
+    foreach (var cell in orderedCells)
+    {
+        CreateHtmlCell(cell, previousXAxis, sb);
+
+        previousXAxis = cell.XAxis;
     }
 
-    private int selectedIteration;
+    sb.Append("</TABLE>");
 
-    private List<int> _iterations = new List<int>
+    return sb.ToString();
+}
+
+private static void CreateHtmlCell(Cell cell, int previousXAxis, StringBuilder sb)
+{
+    if (CellIsInSameRowAsPrevious(cell, previousXAxis))
     {
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-    };
-
-    void Tick()
-    {
-        _currentGrid.Tick();
-        gridToHtml = new MarkupString(GridAsHtmlTable());
-    }
-
-    void TickMultiple()
-    {
-        for (int i = 0; i < selectedIteration; i++)
-        {
-            Tick();
-        }
-    }
-
-    private string GridAsHtmlTable()
-    {
-        var sb = new StringBuilder();
-        sb.Append("<TABLE border=1>\n");
-        var orderedCells = _currentGrid.GetNextGridLiveAndDead().OrderBy(e => e.XAxis);
-
-        var previousXAxis = 0;
-
-        foreach (var cell in orderedCells)
-        {
-            CreateHtmlCell(cell, previousXAxis, sb);
-
-            previousXAxis = cell.XAxis;
-        }
-
-        sb.Append("</TABLE>");
-
-        return sb.ToString();
-    }
-
-    private static void CreateHtmlCell(Cell cell, int previousXAxis, StringBuilder sb)
-    {
-        if (CellIsInSameRowAsPrevious(cell, previousXAxis))
-        {
-            CreateNewCellOnCurrentRow(sb, cell);
-        }
-        else
-        {
-            CreateNewCellOnNewRow(sb, cell);
-        }
-    }
-
-    private static bool CellIsInSameRowAsPrevious(Cell cell, int previousXAxis)
-    {
-        return cell.XAxis == previousXAxis;
-    }
-
-    private IOrderedEnumerable<Cell> SetupTable(StringBuilder sb, out bool firstIteration, out int previousXAxis)
-    {
-        sb.Append("<TABLE border=1>\n");
-        var orderedCells = _currentGrid.GetNextGridLiveAndDead().OrderBy(e => e.XAxis).ThenBy(y => y.YAxis);
-        firstIteration = true;
-        previousXAxis = 0;
-        return orderedCells;
-    }
-
-    private static void CreateNewCellOnNewRow(StringBuilder sb, Cell cell)
-    {
-        sb.Append("</TR>\n"); // close previous row
-        sb.Append("<TR>\n"); // start new row
         CreateNewCellOnCurrentRow(sb, cell);
     }
-
-    private static void CreateNewCellOnCurrentRow(StringBuilder sb, Cell cell)
+    else
     {
-        sb.Append(cell.IsAlive()
-            ? "<TD width=25px; height=25px; style='background-color:black'></TD>"
-            : "<TD width=25px; height=25px></TD>");
+        CreateNewCellOnNewRow(sb, cell);
     }
+}
 
+private static bool CellIsInSameRowAsPrevious(Cell cell, int previousXAxis)
+{
+    return cell.XAxis == previousXAxis;
+}
+
+private IOrderedEnumerable<Cell> SetupTable(StringBuilder sb, out bool firstIteration, out int previousXAxis)
+{
+    sb.Append("<TABLE border=1>\n");
+    var orderedCells = _currentGrid.GetNextGridLiveAndDead().OrderBy(e => e.XAxis).ThenBy(y => y.YAxis);
+    firstIteration = true;
+    previousXAxis = 0;
+    return orderedCells;
+}
+
+private static void CreateNewCellOnNewRow(StringBuilder sb, Cell cell)
+{
+    sb.Append("</TR>\n");
+    sb.Append("<TR>\n");
+    CreateNewCellOnCurrentRow(sb, cell);
+}
+
+private static void CreateNewCellOnCurrentRow(StringBuilder sb, Cell cell)
+{
+    sb.Append(cell.IsAlive()
+        ? "<TD width=50px; height=50px; style='background-color:black'></TD>"
+        : "<TD width=50px; height=50px></TD>");
+}
 }

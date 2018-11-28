@@ -1,38 +1,15 @@
-﻿@page "/gameOfLife"
-@using System.Text
+﻿@using System.Text
 @inject HttpClient Http
 @inject Grid Grid;
 
-<h1>Game of life</h1>
-
-@if (_currentGrid == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div>
-        <div class="btn-group" style="padding-bottom: 30px">
-            <div>
-                <div class="btn btn-primary" style="padding-right: 5px" onclick="@Tick">Tick</div>
-            </div>
-            <div>
-                <div class="btn btn-primary" style="padding-right: 5px" onclick="@TickMultiple">Regenerate Multiple</div>
-            </div>
-            <div>
-                <input class ="form-control" type="number" min="0" step="1" bind="@_selectedIteration" />
-            </div>
-        </div>
-    </div>
-
-   // <GameOfLife></GameOfLife>
-
-    <div>
-        @(_gridToHtml)
-    </div>
-}
+<div>
+    @(_gridToHtml)
+</div>
 
 @functions {
+
+    [Parameter]
+    private int SelectedIterations { get; set; }
 
     Grid _currentGrid;
     private MarkupString _gridToHtml;
@@ -54,24 +31,17 @@ else
         _gridToHtml = new MarkupString(GridAsHtmlTable());
     }
 
-    private int _selectedIteration;
+   
 
     void Tick()
     {
         _currentGrid.Tick();
         _gridToHtml = new MarkupString(GridAsHtmlTable());
-        ChangeState();
-    }
-
-    void ChangeState()
-    {
-        StateHasChanged();
-        Console.WriteLine("State changed");
     }
 
     void TickMultiple()
     {
-        for (var i = 0; i < _selectedIteration; i++)
+        for (var i = 0; i < SelectedIterations; i++)
         {
             _gridToHtml = new MarkupString(string.Empty);
             Console.WriteLine("Got here tick multiple");
@@ -79,10 +49,9 @@ else
         }
     }
 
-    protected override void OnAfterRender()
+    void Test()
     {
-        Console.WriteLine("rendered...");
-        base.OnAfterRender();
+        Console.Write("got here");
     }
 
     private string GridAsHtmlTable()

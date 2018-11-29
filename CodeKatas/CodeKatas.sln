@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{628109B8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeKatas.Tests.Unit", "..\CodeKatas.Tests.Unit\CodeKatas.Tests.Unit.csproj", "{F016F654-6445-476F-93C0-C337AFFCEAC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeKata.UI", "CodeKata.UI\CodeKata.UI.csproj", "{169C0841-42AB-4CC8-9040-225E29680521}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeKata.UI", "CodeKata.UI\CodeKata.UI.csproj", "{169C0841-42AB-4CC8-9040-225E29680521}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

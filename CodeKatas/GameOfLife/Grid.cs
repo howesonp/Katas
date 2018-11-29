@@ -41,20 +41,21 @@ namespace CodeKatas.GameOfLife
 
         private IEnumerable<Cell> GetGridCellsToCheck()
         {
-            var gridCoordinates = new Coordinate(GetMinGridPoint(), GetMaxGridPoint());
+            var minGridPoint = GetMinGridPoint();
+            var maxGridPoint = GetMaxGridPoint();
 
-            return CreateNewGridCells(gridCoordinates);
+            return CreateNewGridCells(minGridPoint, maxGridPoint);
         }
 
-        private IEnumerable<Cell> CreateNewGridCells(Coordinate coordinates)
+        private IEnumerable<Cell> CreateNewGridCells(int minGridPoint, int maxGridPoint)
         {
             var returnCells = new List<Cell>();
 
-            for (var xAxis = coordinates.XAxis; xAxis <= coordinates.YAxis; xAxis++)
+            for (var xAxis = minGridPoint; xAxis <= maxGridPoint; xAxis++)
             {
-                var yAxis = coordinates.YAxis;
+                var yAxis = maxGridPoint;
 
-                while (yAxis >= coordinates.XAxis)
+                while (yAxis >= minGridPoint)
                 {
                     returnCells.Add(new Cell(xAxis, yAxis));
                     yAxis--;

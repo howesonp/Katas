@@ -61,7 +61,6 @@
     <Compile Include="CalculationExtensions.cs" />
     <Compile Include="FizzBuzzGame.cs" />
     <Compile Include="StringCalculator.cs" />
-    <Compile Include="GameOfLife\Coordinate.cs" />
     <Compile Include="TicTacToe\GameWinOptions.cs" />
     <Compile Include="TicTacToe\BoardPosition.cs" />
     <Compile Include="TicTacToe\GameState.cs" />

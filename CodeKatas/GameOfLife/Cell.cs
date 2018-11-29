@@ -42,7 +42,7 @@ namespace CodeKatas.GameOfLife
             return cellNeighbours;
         }
 
-        private static Cell GetCellNeighbour(Cell cell, Coordinate neighbour)
+        private static Cell GetCellNeighbour(Cell cell, Cell neighbour)
         {
             var xAxis = cell.XAxis + neighbour.XAxis;
             var yAxis = cell.YAxis + neighbour.YAxis;

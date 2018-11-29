@@ -17,16 +17,13 @@ else
                 <div class="btn btn-primary" style="padding-right: 5px" onclick="@Tick">Tick</div>
             </div>
             <div>
-                <div class="btn btn-primary" style="padding-right: 5px" onclick="@TickMultiple">Regenerate Multiple</div>
+                <div class="btn btn-primary" style="padding-right: 5px" onclick="@TickMultiple">Ticks</div>
             </div>
             <div>
                 <input class ="form-control" type="number" min="0" step="1" bind="@_selectedIteration" />
             </div>
         </div>
     </div>
-
-   // <GameOfLife></GameOfLife>
-
     <div>
         @(_gridToHtml)
     </div>
@@ -37,7 +34,7 @@ else
     Grid _currentGrid;
     private MarkupString _gridToHtml;
 
-    protected override async Task OnInitAsync()
+    protected override void OnInit()
     {
         var initialListOfCells = new List<Cell>
         {
@@ -73,8 +70,6 @@ else
     {
         for (var i = 0; i < _selectedIteration; i++)
         {
-            _gridToHtml = new MarkupString(string.Empty);
-            Console.WriteLine("Got here tick multiple");
             Tick();
         }
     }
@@ -135,4 +130,11 @@ else
             ? "<TD width=50px; height=50px; style='background-color:black'></TD>"
             : "<TD width=50px; height=50px></TD>");
     }
+
+    protected override bool ShouldRender()  
+    {  
+        Console.WriteLine("ShouldRender");  
+        return true;  
+ 
+    }  
 }
